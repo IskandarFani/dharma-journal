@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category_translation.title }} — Dharma Journal{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-6xl px-6 py-14">
+    <section class="mx-auto max-w-3xl text-center">
+        <p class="mb-5 text-xs uppercase tracking-[0.3em] text-amber-800">
+            {{ ui.category }}
+        </p>
+
+        <h1 class="serif text-5xl leading-tight md:text-7xl">
+            {{ category_translation.title }}
+        </h1>
+
+        {% if category_translation.description %}
+            <p class="mx-auto mt-6 max-w-2xl text-xl leading-8 text-stone-700">
+                {{ category_translation.description }}
+            </p>
+        {% endif %}
+    </section>
+
+    <section class="mt-14 grid gap-8 md:grid-cols-2">
+        {% for card in article_cards %}
+            <article class="border-t border-stone-300 pt-6">
+                <p class="mb-3 text-xs uppercase tracking-[0.25em] text-stone-500">
+                    {% if card.article.published_at %}
+                        {{ card.article.published_at|date:"d.m.Y" }}
+                    {% else %}
+                        Dharma Journal
+                    {% endif %}
+                </p>
+
+                {% if card.translation.slug %}
+                    <a href="{% url 'article_detail' language card.translation.slug %}" class="block group">
+                        <h2 class="serif text-3xl leading-tight group-hover:text-amber-800">
+                            {{ card.translation.title }}
+                        </h2>
+                    </a>
+                {% else %}
+                    <h2 class="serif text-3xl leading-tight">
+                        {{ card.translation.title }}
+                    </h2>
+                {% endif %}
+
+                {% if card.translation.excerpt %}
+                    <p class="mt-4 text-base leading-7 text-stone-700">
+                        {{ card.translation.excerpt }}
+                    </p>
+                {% endif %}
+
+                <p class="mt-4 text-sm text-stone-500">
+                    {% if card.article.author %}
+                        {{ ui.author }}: {{ card.article.author.name }}
+                    {% else %}
+                        {{ ui.author }}: {{ ui.editorial }}
+                    {% endif %}
+                </p>
+            </article>
+        {% empty %}
+            <div class="md:col-span-2 border-t border-stone-300 pt-8 text-center">
+                <p class="text-base leading-7 text-stone-600">
+                    {{ ui.no_published }}
+                </p>
+            </div>
+        {% endfor %}
+    </section>
+</main>
+{% endblock %}

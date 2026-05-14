@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article_translation.title }} — Dharma Journal{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-5xl px-6 py-14">
+    <article>
+        <div class="mx-auto max-w-3xl text-center">
+            {% if category_translation %}
+                <p class="mb-5 text-xs uppercase tracking-[0.3em] text-amber-800">
+                    {{ category_translation.title }}
+                </p>
+            {% endif %}
+
+            <h1 class="serif text-5xl leading-tight md:text-7xl">
+                {{ article_translation.title }}
+            </h1>
+
+            {% if article_translation.subtitle %}
+                <p class="mx-auto mt-6 max-w-2xl text-xl leading-8 text-stone-700">
+                    {{ article_translation.subtitle }}
+                </p>
+            {% endif %}
+
+            <p class="mt-6 text-sm text-stone-500">
+                {% if article.author %}
+                    {{ ui.author }}: {{ article.author.name }}
+                {% else %}
+                    {{ ui.author }}: {{ ui.editorial }}
+                {% endif %}
+
+                {% if article.published_at %}
+                    · {{ article.published_at|date:"d.m.Y" }}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="my-12 aspect-[16/8] bg-stone-300"></div>
+
+        <div class="article-body serif mx-auto max-w-3xl text-xl leading-9 text-stone-800 whitespace-pre-line">
+            {{ article_translation.body }}
+        </div>
+    </article>
+
+    <section class="mx-auto mt-16 max-w-3xl border-t border-stone-300 pt-10">
+        <h2 class="mb-8 text-xs uppercase tracking-[0.3em] text-stone-500">
+            {{ ui.related }}
+        </h2>
+
+        <div class="grid gap-6">
+            {% for related in related_articles %}
+                {% with related_translation=related.get_translation %}
+                    {% if related_translation %}
+                        {% if related_translation.slug %}
+                            <a href="{% url 'article_detail' language related_translation.slug %}" class="block border-b border-stone-300 pb-5 group">
+                                <p class="serif text-2xl leading-snug group-hover:text-amber-800">
+                                    {{ related_translation.title }}
+                                </p>
+
+                                {% if related_translation.excerpt %}
+                                    <p class="mt-2 text-sm leading-6 text-stone-600">
+                                        {{ related_translation.excerpt }}
+                                    </p>
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            <div class="border-b border-stone-300 pb-5">
+                                <p class="serif text-2xl leading-snug">
+                                    {{ related_translation.title }}
+                                </p>
+
+                                {% if related_translation.excerpt %}
+                                    <p class="mt-2 text-sm leading-6 text-stone-600">
+                                        {{ related_translation.excerpt }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endwith %}
+            {% empty %}
+                <p class="text-sm text-stone-600">
+                    {{ ui.no_related }}
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}
