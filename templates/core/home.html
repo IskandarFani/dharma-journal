@@ -8,7 +8,25 @@
 
         {% if featured_card %}
             <article class="border-b border-stone-300 pb-8 lg:border-b-0">
-                <div class="mb-5 aspect-[16/10] bg-stone-300"></div>
+                {% if featured_card.article.cover_image %}
+                    <a href="{% url 'article_detail' language featured_card.translation.slug %}" class="block mb-5 overflow-hidden bg-stone-300">
+                        <img
+                            src="{{ featured_card.article.cover_image.url }}"
+                            alt="{{ featured_card.translation.title }}"
+                            class="aspect-[16/10] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                        >
+                    </a>
+                {% elif featured_card.article.category.cover_image %}
+                    <a href="{% url 'article_detail' language featured_card.translation.slug %}" class="block mb-5 overflow-hidden bg-stone-300">
+                        <img
+                            src="{{ featured_card.article.category.cover_image.url }}"
+                            alt="{{ featured_card.translation.title }}"
+                            class="aspect-[16/10] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                        >
+                    </a>
+                {% else %}
+                    <div class="mb-5 aspect-[16/10] bg-stone-300"></div>
+                {% endif %}
 
                 <p class="mb-3 text-xs uppercase tracking-[0.25em] text-amber-800">
                     {% if featured_card.category_translation %}
@@ -69,6 +87,24 @@
         <section class="grid gap-8">
             {% for card in secondary_cards %}
                 <article class="border-b border-stone-300 pb-6">
+                    {% if card.article.cover_image %}
+                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block mb-4 overflow-hidden bg-stone-300">
+                            <img
+                                src="{{ card.article.cover_image.url }}"
+                                alt="{{ card.translation.title }}"
+                                class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                            >
+                        </a>
+                    {% elif card.article.category.cover_image %}
+                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block mb-4 overflow-hidden bg-stone-300">
+                            <img
+                                src="{{ card.article.category.cover_image.url }}"
+                                alt="{{ card.translation.title }}"
+                                class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                            >
+                        </a>
+                    {% endif %}
+
                     <p class="mb-2 text-xs uppercase tracking-[0.25em] text-stone-500">
                         {% if card.category_translation %}
                             {{ card.category_translation.title }}

@@ -13,6 +13,13 @@ class Category(models.Model):
     order = models.PositiveIntegerField("Порядок", default=100)
     is_active = models.BooleanField("Активна", default=True)
 
+    cover_image = models.ImageField(
+        "Обложка рубрики",
+        upload_to="categories/",
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         ordering = ["order", "id"]
         verbose_name = "Рубрика"
@@ -97,6 +104,18 @@ class Article(models.Model):
         default=Status.DRAFT,
     )
     is_featured = models.BooleanField("Главный материал", default=False)
+
+    cover_image = models.ImageField(
+        "Обложка статьи",
+        upload_to="articles/",
+        blank=True,
+        null=True,
+    )
+    cover_caption = models.CharField(
+        "Подпись к обложке",
+        max_length=300,
+        blank=True,
+    )
 
     published_at = models.DateTimeField("Дата публикации", null=True, blank=True)
     created_at = models.DateTimeField("Создано", auto_now_add=True)

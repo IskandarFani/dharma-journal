@@ -19,6 +19,7 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [CategoryTranslationInline]
     list_display = ["__str__", "order", "is_active"]
     list_editable = ["order", "is_active"]
+    fields = ["order", "is_active", "cover_image"]
 
 
 @admin.register(Author)
@@ -47,3 +48,27 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ["status", "is_featured", "category"]
     list_editable = ["status", "is_featured"]
     date_hierarchy = "published_at"
+
+    fieldsets = (
+        (
+            "Основное",
+            {
+                "fields": (
+                    "category",
+                    "author",
+                    "status",
+                    "is_featured",
+                    "published_at",
+                )
+            },
+        ),
+        (
+            "Обложка",
+            {
+                "fields": (
+                    "cover_image",
+                    "cover_caption",
+                )
+            },
+        ),
+    )

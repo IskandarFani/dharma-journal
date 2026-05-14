@@ -20,9 +20,37 @@
         {% endif %}
     </section>
 
+    {% if category_translation.category.cover_image %}
+        <section class="mt-12">
+            <img
+                src="{{ category_translation.category.cover_image.url }}"
+                alt="{{ category_translation.title }}"
+                class="aspect-[16/6] w-full object-cover"
+            >
+        </section>
+    {% endif %}
+
     <section class="mt-14 grid gap-8 md:grid-cols-2">
         {% for card in article_cards %}
             <article class="border-t border-stone-300 pt-6">
+                {% if card.article.cover_image %}
+                    <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden bg-stone-300">
+                        <img
+                            src="{{ card.article.cover_image.url }}"
+                            alt="{{ card.translation.title }}"
+                            class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                        >
+                    </a>
+                {% elif card.article.category.cover_image %}
+                    <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden bg-stone-300">
+                        <img
+                            src="{{ card.article.category.cover_image.url }}"
+                            alt="{{ card.translation.title }}"
+                            class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                        >
+                    </a>
+                {% endif %}
+
                 <p class="mb-3 text-xs uppercase tracking-[0.25em] text-stone-500">
                     {% if card.article.published_at %}
                         {{ card.article.published_at|date:"d.m.Y" }}
