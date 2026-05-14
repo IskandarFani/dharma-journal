@@ -1,147 +1,122 @@
 {% extends "base.html" %}
 
-{% block title %}Dharma Journal{% endblock %}
-
 {% block content %}
-<main class="mx-auto max-w-7xl px-6 py-12">
-    <section class="grid gap-10 lg:grid-cols-[1.5fr_1fr_0.8fr]">
-
-        {% if featured_card %}
-            <article class="border-b border-stone-300 pb-8 lg:border-b-0">
-                {% if featured_card.article.cover_image %}
-                    <a href="{% url 'article_detail' language featured_card.translation.slug %}" class="block mb-5 overflow-hidden bg-stone-300">
-                        <img
-                            src="{{ featured_card.article.cover_image.url }}"
-                            alt="{{ featured_card.translation.title }}"
-                            class="aspect-[16/10] w-full object-cover transition duration-300 hover:scale-[1.02]"
-                        >
-                    </a>
-                {% elif featured_card.article.category.cover_image %}
-                    <a href="{% url 'article_detail' language featured_card.translation.slug %}" class="block mb-5 overflow-hidden bg-stone-300">
-                        <img
-                            src="{{ featured_card.article.category.cover_image.url }}"
-                            alt="{{ featured_card.translation.title }}"
-                            class="aspect-[16/10] w-full object-cover transition duration-300 hover:scale-[1.02]"
-                        >
-                    </a>
-                {% else %}
-                    <div class="mb-5 aspect-[16/10] bg-stone-300"></div>
-                {% endif %}
-
-                <p class="mb-3 text-xs uppercase tracking-[0.25em] text-amber-800">
-                    {% if featured_card.category_translation %}
-                        {{ featured_card.category_translation.title }}
-                    {% else %}
-                        {{ ui.featured }}
-                    {% endif %}
-                </p>
-
-                {% if featured_card.translation.slug %}
-                    <a href="{% url 'article_detail' language featured_card.translation.slug %}" class="block group">
-                        <h2 class="serif text-4xl md:text-5xl leading-tight group-hover:text-amber-800">
-                            {{ featured_card.translation.title }}
-                        </h2>
-                    </a>
-                {% else %}
-                    <h2 class="serif text-4xl md:text-5xl leading-tight">
-                        {{ featured_card.translation.title }}
-                    </h2>
-                {% endif %}
-
-                {% if featured_card.translation.excerpt %}
-                    <p class="mt-5 max-w-2xl text-lg leading-8 text-stone-700">
-                        {{ featured_card.translation.excerpt }}
-                    </p>
-                {% endif %}
-
-                <p class="mt-5 text-sm text-stone-500">
-                    {% if featured_card.article.author %}
-                        {{ ui.author }}: {{ featured_card.article.author.name }}
-                    {% else %}
-                        {{ ui.author }}: {{ ui.editorial }}
-                    {% endif %}
-
-                    {% if featured_card.article.published_at %}
-                        · {{ featured_card.article.published_at|date:"d.m.Y" }}
-                    {% endif %}
-                </p>
-            </article>
-        {% else %}
-            <article class="border-b border-stone-300 pb-8 lg:border-b-0">
-                <div class="mb-5 aspect-[16/10] bg-stone-300"></div>
-
-                <p class="mb-3 text-xs uppercase tracking-[0.25em] text-amber-800">
-                    {{ ui.featured }}
-                </p>
-
-                <h2 class="serif text-4xl md:text-5xl leading-tight">
-                    {{ ui.no_featured_title }}
-                </h2>
-
-                <p class="mt-5 max-w-2xl text-lg leading-8 text-stone-700">
-                    {{ ui.no_featured_text }}
-                </p>
-            </article>
-        {% endif %}
-
-        <section class="grid gap-8">
-            {% for card in secondary_cards %}
-                <article class="border-b border-stone-300 pb-6">
-                    {% if card.article.cover_image %}
-                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block mb-4 overflow-hidden bg-stone-300">
+<section class="mx-auto max-w-7xl px-6 py-12">
+    <div class="grid gap-10 lg:grid-cols-[1.25fr_0.85fr_0.65fr]">
+        <section>
+            {% if featured_card %}
+                <article>
+                    <a
+                        href="{% url 'article_detail' language featured_card.translation.slug %}"
+                        class="group block overflow-hidden rounded-sm"
+                    >
+                        {% if featured_card.article.cover_image %}
                             <img
-                                src="{{ card.article.cover_image.url }}"
-                                alt="{{ card.translation.title }}"
-                                class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                                src="{{ featured_card.article.cover_image.url }}"
+                                alt="{{ featured_card.translation.title }}"
+                                class="aspect-[16/10] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
                             >
-                        </a>
-                    {% elif card.article.category.cover_image %}
-                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block mb-4 overflow-hidden bg-stone-300">
+                        {% elif featured_card.article.category.cover_image %}
                             <img
-                                src="{{ card.article.category.cover_image.url }}"
-                                alt="{{ card.translation.title }}"
-                                class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                                src="{{ featured_card.article.category.cover_image.url }}"
+                                alt="{{ featured_card.translation.title }}"
+                                class="aspect-[16/10] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
                             >
-                        </a>
-                    {% endif %}
-
-                    <p class="mb-2 text-xs uppercase tracking-[0.25em] text-stone-500">
-                        {% if card.category_translation %}
-                            {{ card.category_translation.title }}
                         {% else %}
-                            {{ ui.category }}
+                            <div class="flex aspect-[16/10] items-center justify-center bg-stone-200 text-xs uppercase tracking-[0.25em] text-stone-500 transition duration-500 group-hover:bg-stone-300">
+                                Dharma Journal
+                            </div>
                         {% endif %}
-                    </p>
+                    </a>
 
-                    {% if card.translation.slug %}
-                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block group">
-                            <h3 class="serif text-2xl leading-snug group-hover:text-amber-800">
-                                {{ card.translation.title }}
-                            </h3>
-                        </a>
-                    {% else %}
-                        <h3 class="serif text-2xl leading-snug">
-                            {{ card.translation.title }}
-                        </h3>
+                    {% if featured_card.category_translation %}
+                        <div class="mt-6 text-xs uppercase tracking-[0.3em] text-amber-800">
+                            {{ featured_card.category_translation.title }}
+                        </div>
                     {% endif %}
+
+                    <h2 class="serif mt-3 text-5xl font-normal leading-tight tracking-tight text-stone-950">
+                        <a
+                            href="{% url 'article_detail' language featured_card.translation.slug %}"
+                            class="hover:text-amber-900"
+                        >
+                            {{ featured_card.translation.title }}
+                        </a>
+                    </h2>
+
+                    {% if featured_card.translation.excerpt %}
+                        <p class="mt-5 text-lg leading-8 text-stone-700">
+                            {{ featured_card.translation.excerpt }}
+                        </p>
+                    {% endif %}
+
+                    <div class="mt-7 text-xs uppercase tracking-[0.22em] text-stone-500">
+                        {% if featured_card.article.author %}
+                            {{ ui.author }}: {{ featured_card.article.author.name }}
+                        {% else %}
+                            {{ ui.author }}: {{ ui.editorial }}
+                        {% endif %}
+
+                        {% if featured_card.article.published_at %}
+                            <span class="mx-2">·</span>
+                            <time datetime="{{ featured_card.article.published_at|date:'Y-m-d' }}">
+                                {{ featured_card.article.published_at|date:"d.m.Y" }}
+                            </time>
+                        {% endif %}
+                    </div>
+                </article>
+            {% else %}
+                <article class="border border-stone-300 p-8">
+                    <div class="text-xs uppercase tracking-[0.3em] text-amber-800">
+                        {{ ui.featured }}
+                    </div>
+
+                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950">
+                        {{ ui.no_featured_title }}
+                    </h2>
+
+                    <p class="mt-4 text-base leading-7 text-stone-600">
+                        {{ ui.no_featured_text }}
+                    </p>
+                </article>
+            {% endif %}
+        </section>
+
+        <section class="space-y-8">
+            {% for card in secondary_cards %}
+                <article class="border-b border-stone-300 pb-8">
+                    {% if card.category_translation %}
+                        <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
+                            {{ card.category_translation.title }}
+                        </div>
+                    {% endif %}
+
+                    <h3 class="serif mt-3 text-2xl leading-snug text-stone-950">
+                        <a
+                            href="{% url 'article_detail' language card.translation.slug %}"
+                            class="hover:text-amber-900"
+                        >
+                            {{ card.translation.title }}
+                        </a>
+                    </h3>
 
                     {% if card.translation.excerpt %}
-                        <p class="mt-3 text-sm leading-6 text-stone-600">
+                        <p class="mt-4 text-sm leading-6 text-stone-600">
                             {{ card.translation.excerpt }}
                         </p>
                     {% endif %}
                 </article>
             {% empty %}
-                <article class="border-b border-stone-300 pb-6">
-                    <p class="mb-2 text-xs uppercase tracking-[0.25em] text-stone-500">
+                <article class="border-b border-stone-300 pb-8">
+                    <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
                         {{ ui.materials }}
-                    </p>
+                    </div>
 
-                    <h3 class="serif text-2xl leading-snug">
+                    <h3 class="serif mt-3 text-2xl leading-snug text-stone-950">
                         {{ ui.add_more_articles }}
                     </h3>
 
-                    <p class="mt-3 text-sm leading-6 text-stone-600">
+                    <p class="mt-4 text-sm leading-6 text-stone-600">
                         {{ ui.add_more_articles_text }}
                     </p>
                 </article>
@@ -149,101 +124,127 @@
         </section>
 
         <aside class="border-t border-stone-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-            <h3 class="mb-6 text-xs uppercase tracking-[0.3em] text-stone-500">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-stone-500">
                 {{ ui.latest }}
             </h3>
 
-            <div class="space-y-5">
+            <div class="mt-6 space-y-6">
                 {% for card in latest_cards %}
-                    {% if card.translation.slug %}
-                        <a href="{% url 'article_detail' language card.translation.slug %}" class="block group">
-                            <p class="serif text-xl leading-snug group-hover:text-amber-800">
+                    <article>
+                        <h4 class="serif text-xl leading-snug text-stone-950">
+                            <a
+                                href="{% url 'article_detail' language card.translation.slug %}"
+                                class="hover:text-amber-900"
+                            >
                                 {{ card.translation.title }}
-                            </p>
+                            </a>
+                        </h4>
 
-                            <p class="mt-2 text-xs text-stone-500">
-                                {% if card.category_translation %}
-                                    {{ card.category_translation.title }}
-                                {% else %}
-                                    {{ ui.category }}
-                                {% endif %}
-                            </p>
-                        </a>
-                    {% else %}
-                        <div>
-                            <p class="serif text-xl leading-snug">
-                                {{ card.translation.title }}
-                            </p>
-
-                            <p class="mt-2 text-xs text-stone-500">
-                                {% if card.category_translation %}
-                                    {{ card.category_translation.title }}
-                                {% else %}
-                                    {{ ui.category }}
-                                {% endif %}
-                            </p>
-                        </div>
-                    {% endif %}
-                {% empty %}
-                    <p class="text-sm leading-6 text-stone-600">
-                        {{ ui.no_published }}
-                    </p>
+                        {% if card.category_translation %}
+                            <div class="mt-2 text-xs text-stone-500">
+                                {{ card.category_translation.title }}
+                            </div>
+                        {% endif %}
+                    </article>
                 {% endfor %}
             </div>
         </aside>
-    </section>
+    </div>
 
     <section class="mt-16 border-y border-stone-300 py-10">
-        <div class="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
+        <div class="grid gap-8 md:grid-cols-[0.8fr_1fr] md:items-center">
             <div>
-                <p class="mb-3 text-xs uppercase tracking-[0.3em] text-amber-800">
+                <div class="text-xs uppercase tracking-[0.3em] text-amber-800">
                     {{ ui.current_issue }}
-                </p>
+                </div>
 
-                <h2 class="serif text-4xl leading-tight">
-                    {{ ui.issue_title }}
-                </h2>
+                {% if current_issue_card %}
+                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950">
+                        {{ current_issue_card.translation.title }}
+                    </h2>
+                {% else %}
+                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950">
+                        {{ ui.issue_title }}
+                    </h2>
+                {% endif %}
             </div>
 
             <div>
-                <p class="text-lg leading-8 text-stone-700">
-                    {{ ui.issue_text }}
-                </p>
+                {% if current_issue_card and current_issue_card.translation.description %}
+                    <p class="text-lg leading-8 text-stone-700">
+                        {{ current_issue_card.translation.description }}
+                    </p>
+                {% else %}
+                    <p class="text-lg leading-8 text-stone-700">
+                        {{ ui.issue_text }}
+                    </p>
+                {% endif %}
 
-                <a href="#" class="mt-6 inline-block border border-stone-900 px-5 py-3 text-xs uppercase tracking-[0.25em] hover:bg-stone-900 hover:text-stone-50">
-                    {{ ui.read_issue }}
-                </a>
+                {% if current_issue_card %}
+                    <a
+                        href="{% url 'issue_detail' language current_issue_card.translation.slug %}"
+                        class="mt-6 inline-flex border border-stone-900 px-6 py-3 text-xs uppercase tracking-[0.25em] text-stone-950 transition hover:bg-stone-950 hover:text-stone-50"
+                    >
+                        {{ ui.read_issue }}
+                    </a>
+                {% else %}
+                    <span class="mt-6 inline-flex border border-stone-400 px-6 py-3 text-xs uppercase tracking-[0.25em] text-stone-500">
+                        {{ ui.read_issue }}
+                    </span>
+                {% endif %}
             </div>
         </div>
     </section>
 
-    <section class="mt-16 bg-stone-900 px-6 py-12 text-stone-50 md:px-12">
-        <div class="grid gap-8 md:grid-cols-[1fr_1fr]">
+    <section id="subscribe" class="mt-16 bg-stone-950 px-8 py-12 text-stone-50">
+        <div class="grid gap-8 md:grid-cols-[1fr_1.5fr] md:items-center">
             <div>
-                <p class="mb-3 text-xs uppercase tracking-[0.3em] text-stone-400">
+                <div class="text-xs uppercase tracking-[0.3em] text-stone-400">
                     {{ ui.subscription }}
-                </p>
+                </div>
 
-                <h2 class="serif text-4xl">
+                <h2 class="serif mt-4 text-3xl leading-tight">
                     {{ ui.subscribe_title }}
                 </h2>
+
+                {% if subscription_status == "success" %}
+                    <p class="mt-4 text-sm leading-6 text-green-200">
+                        {{ ui.subscribe_success }}
+                    </p>
+                {% elif subscription_status == "exists" %}
+                    <p class="mt-4 text-sm leading-6 text-amber-100">
+                        {{ ui.subscribe_already_exists }}
+                    </p>
+                {% elif subscription_status == "error" %}
+                    <p class="mt-4 text-sm leading-6 text-red-200">
+                        {{ ui.subscribe_error }}
+                    </p>
+                {% endif %}
             </div>
 
-            <form class="flex flex-col gap-3 sm:flex-row">
+            <form
+                method="post"
+                action="{% url 'subscribe' language %}"
+                class="grid gap-3 md:grid-cols-[1fr_auto]"
+            >
+                {% csrf_token %}
+
                 <input
                     type="email"
+                    name="email"
+                    required
                     placeholder="{{ ui.email_placeholder }}"
-                    class="w-full border border-stone-600 bg-stone-800 px-4 py-3 text-sm outline-none placeholder:text-stone-400"
+                    class="border border-stone-700 bg-stone-900 px-5 py-4 text-sm text-stone-100 outline-none placeholder:text-stone-400 focus:border-stone-300"
                 >
 
                 <button
                     type="submit"
-                    class="border border-stone-50 px-5 py-3 text-xs uppercase tracking-[0.25em] hover:bg-stone-50 hover:text-stone-900"
+                    class="border border-stone-200 px-6 py-4 text-xs uppercase tracking-[0.25em] text-stone-100 transition hover:bg-stone-100 hover:text-stone-950"
                 >
                     {{ ui.subscribe_button }}
                 </button>
             </form>
         </div>
     </section>
-</main>
+</section>
 {% endblock %}

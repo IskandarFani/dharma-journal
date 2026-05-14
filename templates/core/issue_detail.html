@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="mx-auto max-w-7xl px-6 py-14">
+    <header class="border-b border-stone-300 pb-10">
+        <div class="text-xs uppercase tracking-[0.35em] text-amber-800">
+            {{ ui.current_issue }}
+        </div>
+
+        <h2 class="serif mt-5 max-w-4xl text-5xl font-normal leading-tight tracking-tight text-stone-950 md:text-7xl">
+            {{ issue_translation.title }}
+        </h2>
+
+        {% if issue_translation.description %}
+            <p class="mt-6 max-w-3xl text-xl leading-8 text-stone-600">
+                {{ issue_translation.description }}
+            </p>
+        {% endif %}
+    </header>
+
+    {% if issue.cover_image %}
+        <figure class="mt-10 overflow-hidden rounded-sm">
+            <img
+                src="{{ issue.cover_image.url }}"
+                alt="{{ issue_translation.title }}"
+                class="h-auto w-full object-cover"
+            >
+        </figure>
+    {% endif %}
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_320px]">
+        <main>
+            <div class="space-y-8">
+                {% for card in article_cards %}
+                    <article class="grid gap-6 border-b border-stone-300 pb-8 md:grid-cols-[180px_1fr]">
+                        <div>
+                            <a
+                                href="{% url 'article_detail' language card.translation.slug %}"
+                                class="group block overflow-hidden rounded-sm"
+                            >
+                                {% if card.article.cover_image %}
+                                    <img
+                                        src="{{ card.article.cover_image.url }}"
+                                        alt="{{ card.translation.title }}"
+                                        class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
+                                    >
+                                {% elif card.article.category.cover_image %}
+                                    <img
+                                        src="{{ card.article.category.cover_image.url }}"
+                                        alt="{{ card.translation.title }}"
+                                        class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
+                                    >
+                                {% else %}
+                                    <div class="flex aspect-[4/3] items-center justify-center bg-stone-200 text-[10px] uppercase tracking-[0.25em] text-stone-500 transition duration-500 group-hover:bg-stone-300">
+                                        Dharma Journal
+                                    </div>
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <div>
+                            {% if card.category_translation %}
+                                <a
+                                    href="{% url 'category_detail' language card.category_translation.slug %}"
+                                    class="text-xs uppercase tracking-[0.25em] text-amber-800 hover:text-stone-950"
+                                >
+                                    {{ card.category_translation.title }}
+                                </a>
+                            {% endif %}
+
+                            <h3 class="serif mt-3 text-3xl leading-tight text-stone-950">
+                                <a
+                                    href="{% url 'article_detail' language card.translation.slug %}"
+                                    class="transition hover:text-amber-900"
+                                >
+                                    {{ card.translation.title }}
+                                </a>
+                            </h3>
+
+                            {% if card.translation.excerpt %}
+                                <p class="mt-4 max-w-2xl text-base leading-7 text-stone-600">
+                                    {{ card.translation.excerpt }}
+                                </p>
+                            {% endif %}
+
+                            <div class="mt-5 text-xs uppercase tracking-[0.22em] text-stone-500">
+                                {% if card.article.author %}
+                                    {{ ui.author }}: {{ card.article.author.name }}
+                                {% else %}
+                                    {{ ui.author }}: {{ ui.editorial }}
+                                {% endif %}
+
+                                {% if card.article.published_at %}
+                                    <span class="mx-2">·</span>
+                                    <time datetime="{{ card.article.published_at|date:'Y-m-d' }}">
+                                        {{ card.article.published_at|date:"d.m.Y" }}
+                                    </time>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="text-base leading-7 text-stone-600">
+                        {{ ui.no_published }}
+                    </p>
+                {% endfor %}
+            </div>
+        </main>
+
+        <aside class="border-t border-stone-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            <div class="sticky top-6">
+                <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
+                    Dharma Journal
+                </div>
+
+                <p class="serif mt-4 text-2xl leading-snug text-stone-950">
+                    {{ issue_translation.title }}
+                </p>
+
+                {% if issue_translation.description %}
+                    <p class="mt-4 text-sm leading-6 text-stone-600">
+                        {{ issue_translation.description }}
+                    </p>
+                {% endif %}
+
+                <div class="mt-6 border-t border-stone-300 pt-5 text-xs uppercase tracking-[0.22em] text-stone-500">
+                    {{ article_cards|length }} materials
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

@@ -1,43 +1,49 @@
-<!doctype html>
-<html lang="{{ language|default:'ru' }}">
-
+<!DOCTYPE html>
+<html lang="{{ language }}">
 <head>
-    <meta charset="utf-8">
-    <title>{% block title %}Dharma Journal{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dharma Journal</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         body {
             background: #f7f2e8;
+            color: #1c1917;
         }
 
         .serif {
             font-family: Georgia, "Times New Roman", serif;
         }
 
-        .article-body p {
-            margin-bottom: 1.4rem;
+        .sans {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        details > summary {
+            list-style: none;
+        }
+
+        details > summary::-webkit-details-marker {
+            display: none;
         }
     </style>
-
-    {% block extra_head %}{% endblock %}
 </head>
 
-<body class="text-stone-900">
+<body class="sans min-h-screen">
     <header class="border-b border-stone-300">
         <div class="mx-auto max-w-7xl px-6 py-4">
-            <div class="flex items-center justify-between text-xs uppercase tracking-[0.25em] text-stone-600">
-                <a href="{% url 'home' language %}" class="hover:text-stone-900">
+            <div class="flex items-center justify-between gap-6 text-xs uppercase tracking-[0.25em] text-stone-600">
+                <a href="{% url 'about' language %}" class="hover:text-stone-950">
                     {{ ui.about }}
                 </a>
 
-                <div class="flex gap-3">
+                <div class="flex items-center gap-3">
                     {% for item in language_links %}
                         <a
                             href="{{ item.url }}"
-                            class="{% if item.is_current %}text-stone-900{% else %}hover:text-stone-900{% endif %}"
+                            class="{% if item.is_current %}text-stone-950{% else %}hover:text-stone-950{% endif %}"
                         >
                             {{ item.code|upper }}
                         </a>
@@ -46,36 +52,55 @@
             </div>
 
             <div class="py-10 text-center">
-                <p class="mb-3 text-xs uppercase tracking-[0.35em] text-stone-500">
-                    {{ ui.journal_label }}
-                </p>
-
                 <a href="{% url 'home' language %}" class="inline-block">
-                    <h1 class="serif text-5xl md:text-7xl tracking-tight hover:text-amber-800">
+                    <div class="text-xs uppercase tracking-[0.35em] text-amber-800">
+                        {{ ui.journal_label }}
+                    </div>
+
+                    <h1 class="serif mt-3 text-5xl md:text-7xl font-normal tracking-tight text-stone-950">
                         Dharma Journal
                     </h1>
                 </a>
 
-                <p class="mx-auto mt-4 max-w-2xl text-sm md:text-base leading-7 text-stone-600">
+                <p class="mx-auto mt-5 max-w-2xl text-sm leading-7 text-stone-600">
                     {{ ui.site_subtitle }}
                 </p>
             </div>
 
-            <nav class="flex flex-wrap justify-center gap-x-8 gap-y-3 border-t border-stone-300 pt-4 text-sm uppercase tracking-[0.18em] text-stone-700">
+            <nav class="hidden items-center justify-center gap-x-6 gap-y-3 border-t border-stone-300 pt-4 text-xs uppercase tracking-[0.22em] text-stone-700 md:flex md:flex-wrap">
                 {% for item in navigation_categories %}
-                    <a href="{{ item.url }}" class="hover:text-stone-950">
+                    <a
+                        href="{% url 'category_detail' language item.translation.slug %}"
+                        class="hover:text-stone-950"
+                    >
                         {{ item.translation.title }}
-                    </a>
-                {% empty %}
-                    <a href="{% url 'home' language %}" class="hover:text-stone-950">
-                        Dharma Journal
                     </a>
                 {% endfor %}
             </nav>
+
+            <details class="border-t border-stone-300 pt-4 md:hidden">
+                <summary class="flex cursor-pointer items-center justify-between text-xs uppercase tracking-[0.25em] text-stone-700">
+                    <span>{{ ui.menu }}</span>
+                    <span>+</span>
+                </summary>
+
+                <nav class="mt-5 grid gap-4 border-t border-stone-300 pt-5 text-xs uppercase tracking-[0.22em] text-stone-700">
+                    {% for item in navigation_categories %}
+                        <a
+                            href="{% url 'category_detail' language item.translation.slug %}"
+                            class="hover:text-stone-950"
+                        >
+                            {{ item.translation.title }}
+                        </a>
+                    {% endfor %}
+                </nav>
+            </details>
         </div>
     </header>
 
-    {% block content %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
     <footer class="mt-16 border-t border-stone-300">
         <div class="mx-auto max-w-7xl px-6 py-8 text-center text-xs uppercase tracking-[0.25em] text-stone-500">
@@ -100,5 +125,4 @@
         </div>
     </footer>
 </body>
-
 </html>

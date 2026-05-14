@@ -12,13 +12,16 @@ from .models import (
 class CategoryTranslationInline(admin.StackedInline):
     model = CategoryTranslation
     extra = 1
+    prepopulated_fields = {"slug": ("title",)}
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [CategoryTranslationInline]
+
     list_display = ["__str__", "order", "is_active"]
     list_editable = ["order", "is_active"]
+
     fields = ["order", "is_active", "cover_image"]
 
 
@@ -37,33 +40,47 @@ class ArticleTranslationInline(admin.StackedInline):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     inlines = [ArticleTranslationInline]
+
     list_display = [
         "__str__",
         "category",
+        "issue",
+        "issue_order",
         "author",
         "status",
         "is_featured",
+        "is_editor_pick",
         "published_at",
     ]
-    list_filter = ["status", "is_featured", "category"]
-    list_editable = ["status", "is_featured"]
+    list_filter = ["status", "is_featured", "is_editor_pick", "category", "issue"]
+    list_editable = ["issue_order", "status", "is_featured", "is_editor_pick"]
     date_hierarchy = "published_at"
 
     fieldsets = (
         (
-            "Основное",
+            "Main information",
             {
                 "fields": (
                     "category",
                     "author",
                     "status",
                     "is_featured",
+                    "is_editor_pick",
                     "published_at",
                 )
             },
         ),
         (
-            "Обложка",
+            "Issue",
+            {
+                "fields": (
+                    "issue",
+                    "issue_order",
+                )
+            },
+        ),
+        (
+            "Cover image",
             {
                 "fields": (
                     "cover_image",
