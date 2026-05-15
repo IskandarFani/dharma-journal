@@ -3,7 +3,7 @@ UI_TEXT = {
         "about": "О проекте",
         "menu": "Меню",
         "journal_label": "Buddhist cultural journal",
-        "site_subtitle": "Сдержанный журнал о буддийской культуре, практике, текстах, людях и повседневной Дхарме.",
+        "site_subtitle": "Буддийская философия, наука, культура и практика.",
 
         "nav_living_day": "Живой день",
         "nav_coffee_portrait": "Портрет с кофе",
@@ -42,13 +42,13 @@ UI_TEXT = {
         "no_published": "В этой рубрике пока нет опубликованных материалов.",
 
         "about_title": "О проекте",
-        "about_kicker": "Dharma Journal",
+        "about_kicker": "Sanghaya",
     },
     "en": {
         "about": "About",
         "menu": "Menu",
         "journal_label": "Buddhist cultural journal",
-        "site_subtitle": "A quiet journal on Buddhist culture, practice, texts, people, and everyday Dharma.",
+        "site_subtitle": "Buddhist philosophy, science, culture, and practice.",
 
         "nav_living_day": "Living Day",
         "nav_coffee_portrait": "Portrait with Coffee",
@@ -87,13 +87,13 @@ UI_TEXT = {
         "no_published": "There are no published articles in this category yet.",
 
         "about_title": "About the project",
-        "about_kicker": "Dharma Journal",
+        "about_kicker": "Sanghaya",
     },
     "lt": {
         "about": "Apie projektą",
         "menu": "Meniu",
         "journal_label": "Buddhist cultural journal",
-        "site_subtitle": "Ramus žurnalas apie budistinę kultūrą, praktiką, tekstus, žmones ir kasdienę Dharmą.",
+        "site_subtitle": "Budistinė filosofija, mokslas, kultūra ir praktika.",
 
         "nav_living_day": "Gyva diena",
         "nav_coffee_portrait": "Portretas su kava",
@@ -132,31 +132,31 @@ UI_TEXT = {
         "no_published": "Šioje rubrikoje kol kas nėra paskelbtų tekstų.",
 
         "about_title": "Apie projektą",
-        "about_kicker": "Dharma Journal",
+        "about_kicker": "Sanghaya",
     },
 }
 
 
 ABOUT_CONTENT = {
     "ru": [
-        "Dharma Journal — это культурный онлайн-журнал о Дхарме, внимании, традиции и повседневной практике.",
+        "Sanghaya — это культурный онлайн-журнал о Дхарме, внимании, традиции и повседневной практике.",
         "Мы пишем о буддийской культуре не как о музейном предмете и не как о наборе экзотических символов, а как о живом способе видеть человека, мир и действие. Нас интересуют тексты, учителя, ремесло, городская жизнь, тишина, красота, труд, разговор и внутреннее усилие.",
         "Журнал выходит на русском, английском и литовском языках. Для нас это не только вопрос перевода, но и способ создать пространство диалога между культурами, практиками и читателями.",
-        "Dharma Journal не стремится заменить учение, наставника или общину. Его задача скромнее: бережно собирать материалы, которые помогают остановиться, всмотреться и задать более точный вопрос.",
+        "Sanghaya не стремится заменить учение, наставника или общину. Его задача скромнее: бережно собирать материалы, которые помогают остановиться, всмотреться и задать более точный вопрос.",
         "Мы верим, что Дхарма проявляется не только в храме или медитационном зале. Она может открываться в разговоре за кофе, в старом тексте, в работе мастера, в раздражении, в утреннем свете, в молчании и в самом обычном дне.",
     ],
     "en": [
-        "Dharma Journal is an online cultural journal about Dharma, attention, tradition, and everyday practice.",
+        "Sanghaya is an online cultural journal about Dharma, attention, tradition, and everyday practice.",
         "We approach Buddhist culture not as a museum object and not as a collection of exotic symbols, but as a living way of seeing the human being, the world, and action. We are interested in texts, teachers, craft, city life, silence, beauty, work, conversation, and inner effort.",
         "The journal is published in Russian, English, and Lithuanian. For us, this is not only a matter of translation, but also a way to create a space of dialogue between cultures, practitioners, and readers.",
-        "Dharma Journal does not aim to replace teaching, a teacher, or a community. Its task is more modest: to carefully gather materials that help us pause, look more closely, and ask a more precise question.",
+        "Sanghaya does not aim to replace teaching, a teacher, or a community. Its task is more modest: to carefully gather materials that help us pause, look more closely, and ask a more precise question.",
         "We believe that Dharma appears not only in a temple or a meditation hall. It can become visible in a conversation over coffee, in an old text, in the work of a craftsperson, in irritation, in morning light, in silence, and in the most ordinary day.",
     ],
     "lt": [
-        "Dharma Journal — tai kultūrinis internetinis žurnalas apie Dharmą, dėmesį, tradiciją ir kasdienę praktiką.",
+        "Sanghaya — tai kultūrinis internetinis žurnalas apie Dharmą, dėmesį, tradiciją ir kasdienę praktiką.",
         "Apie budistinę kultūrą rašome ne kaip apie muziejaus objektą ir ne kaip apie egzotiškų simbolių rinkinį, bet kaip apie gyvą būdą matyti žmogų, pasaulį ir veiksmą. Mus domina tekstai, mokytojai, amatas, miesto gyvenimas, tyla, grožis, darbas, pokalbis ir vidinė pastanga.",
         "Žurnalas leidžiamas rusų, anglų ir lietuvių kalbomis. Mums tai ne tik vertimo klausimas, bet ir būdas kurti dialogo erdvę tarp kultūrų, praktikuojančiųjų ir skaitytojų.",
-        "Dharma Journal nesiekia pakeisti mokymo, mokytojo ar bendruomenės. Jo užduotis kuklesnė: rūpestingai rinkti medžiagą, kuri padeda sustoti, įsižiūrėti ir užduoti tikslesnį klausimą.",
+        "Sanghaya nesiekia pakeisti mokymo, mokytojo ar bendruomenės. Jo užduotis kuklesnė: rūpestingai rinkti medžiagą, kuri padeda sustoti, įsižiūrėti ir užduoti tikslesnį klausimą.",
         "Tikime, kad Dharma atsiskleidžia ne tik šventykloje ar meditacijos salėje. Ji gali pasirodyti pokalbyje prie kavos, sename tekste, meistro darbe, susierzinime, ryto šviesoje, tyloje ir pačioje paprasčiausioje dienoje.",
     ],
 }

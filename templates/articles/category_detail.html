@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ category_translation.title }} — Dharma Journal{% endblock %}
+{% block title %}{{ category_translation.title }} — Sanghaya{% endblock %}
 
 {% block content %}
 <main class="mx-auto max-w-6xl px-6 py-14">
@@ -55,7 +55,7 @@
                     {% if card.article.published_at %}
                         {{ card.article.published_at|date:"d.m.Y" }}
                     {% else %}
-                        Dharma Journal
+                        Sanghaya
                     {% endif %}
                 </p>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dharma Journal</title>
+    <title>Sanghaya</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -35,7 +35,7 @@
     <header class="border-b border-stone-300">
         <div class="mx-auto max-w-7xl px-6 py-4">
             <div class="flex items-center justify-between gap-6 text-xs uppercase tracking-[0.25em] text-stone-600">
-                <a href="{% url 'about' language %}" class="hover:text-stone-950">
+                <a href="{% url 'about' language %}" class="transition duration-300 hover:text-stone-950">
                     {{ ui.about }}
                 </a>
 
@@ -43,7 +43,7 @@
                     {% for item in language_links %}
                         <a
                             href="{{ item.url }}"
-                            class="{% if item.is_current %}text-stone-950{% else %}hover:text-stone-950{% endif %}"
+                            class="{% if item.is_current %}text-stone-950{% else %}transition duration-300 hover:text-stone-950{% endif %}"
                         >
                             {{ item.code|upper }}
                         </a>
@@ -52,13 +52,13 @@
             </div>
 
             <div class="py-10 text-center">
-                <a href="{% url 'home' language %}" class="inline-block">
-                    <div class="text-xs uppercase tracking-[0.35em] text-amber-800">
+                <a href="{% url 'home' language %}" class="group inline-block">
+                    <div class="text-xs uppercase tracking-[0.35em] text-amber-800 transition duration-300 group-hover:text-amber-900">
                         {{ ui.journal_label }}
                     </div>
 
-                    <h1 class="serif mt-3 text-5xl md:text-7xl font-normal tracking-tight text-stone-950">
-                        Dharma Journal
+                    <h1 class="serif mt-3 text-5xl md:text-7xl font-normal tracking-tight text-stone-950 transition duration-300 group-hover:text-amber-900">
+                        Sanghaya
                     </h1>
                 </a>
 
@@ -71,7 +71,7 @@
                 {% for item in navigation_categories %}
                     <a
                         href="{% url 'category_detail' language item.translation.slug %}"
-                        class="hover:text-stone-950"
+                        class="transition duration-300 hover:text-stone-950"
                     >
                         {{ item.translation.title }}
                     </a>
@@ -88,7 +88,7 @@
                     {% for item in navigation_categories %}
                         <a
                             href="{% url 'category_detail' language item.translation.slug %}"
-                            class="hover:text-stone-950"
+                            class="transition duration-300 hover:text-stone-950"
                         >
                             {{ item.translation.title }}
                         </a>
@@ -104,8 +104,8 @@
 
     <footer class="mt-16 border-t border-stone-300">
         <div class="mx-auto max-w-7xl px-6 py-8 text-center text-xs uppercase tracking-[0.25em] text-stone-500">
-            <a href="{% url 'home' language %}" class="hover:text-stone-900">
-                Dharma Journal
+            <a href="{% url 'home' language %}" class="transition duration-300 hover:text-stone-900">
+                Sanghaya
             </a>
 
             <span class="mx-2">·</span>
@@ -113,7 +113,7 @@
             {% for item in language_links %}
                 <a
                     href="{{ item.url }}"
-                    class="{% if item.is_current %}text-stone-900{% else %}hover:text-stone-900{% endif %}"
+                    class="{% if item.is_current %}text-stone-900{% else %}transition duration-300 hover:text-stone-900{% endif %}"
                 >
                     {{ item.code|upper }}
                 </a>

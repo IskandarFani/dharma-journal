@@ -7,8 +7,8 @@ from articles.views import article_detail, category_detail
 from core.views import about, home, issue_detail, subscribe
 
 
-admin.site.site_header = "Dharma Journal Administration"
-admin.site.site_title = "Dharma Journal Admin"
+admin.site.site_header = "Sanghaya Administration"
+admin.site.site_title = "Sanghaya Admin"
 admin.site.index_title = "Editorial dashboard"
 
 
