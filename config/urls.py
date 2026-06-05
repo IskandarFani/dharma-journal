@@ -7,16 +7,14 @@ from articles.views import article_detail, category_detail
 from core.views import about, home, issue_detail, subscribe
 
 
-admin.site.site_header = "Sanghaya Administration"
-admin.site.site_title = "Sanghaya Admin"
+admin.site.site_header = "Sanghaya Editorial"
+admin.site.site_title = "Sanghaya"
 admin.site.index_title = "Editorial dashboard"
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     path("", home, {"language": "ru"}, name="home_default"),
-
     path("<str:language>/", home, name="home"),
     path("<str:language>/about/", about, name="about"),
     path("<str:language>/subscribe/", subscribe, name="subscribe"),

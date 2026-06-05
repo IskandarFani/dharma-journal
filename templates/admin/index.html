@@ -1,0 +1,135 @@
+{% extends "admin/base_site.html" %}
+{% load admin_dashboard i18n static %}
+
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard editorial-dashboard-page{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+{% editorial_dashboard as dashboard %}
+
+<section class="editorial-hero">
+  <div>
+    <p class="editorial-eyebrow">Workspace</p>
+    <div class="editorial-title">Editorial dashboard</div>
+    <p class="editorial-subtitle">Plan issues, prepare multilingual articles, and keep the publication queue visible.</p>
+  </div>
+  <div class="editorial-actions">
+    <a class="editorial-button is-primary" href="{% url "admin:articles_article_add" %}">New article</a>
+    <a class="editorial-button" href="{% url "admin:core_issue_add" %}">New issue</a>
+    <a class="editorial-button" href="/">View site</a>
+  </div>
+</section>
+
+<section class="metric-grid" aria-label="Editorial status">
+  <a class="metric-card" href="{% url "admin:articles_article_changelist" %}">
+    <span class="metric-label">All articles</span>
+    <strong>{{ dashboard.article_count }}</strong>
+    <span class="metric-note">{{ dashboard.published_count }} published</span>
+  </a>
+  <a class="metric-card is-warning" href="{% url "admin:articles_article_changelist" %}?status__exact=draft">
+    <span class="metric-label">Drafts</span>
+    <strong>{{ dashboard.draft_count }}</strong>
+    <span class="metric-note">Waiting for editorial work</span>
+  </a>
+  <a class="metric-card" href="{% url "admin:articles_article_changelist" %}?is_editor_pick__exact=1">
+    <span class="metric-label">Editor picks</span>
+    <strong>{{ dashboard.editor_pick_count }}</strong>
+    <span class="metric-note">{{ dashboard.featured_count }} featured</span>
+  </a>
+  <a class="metric-card is-attention" href="{% url "admin:articles_article_changelist" %}">
+    <span class="metric-label">Incomplete languages</span>
+    <strong>{{ dashboard.missing_translation_count }}</strong>
+    <span class="metric-note">Less than RU, EN, LT</span>
+  </a>
+</section>
+
+<section class="dashboard-layout">
+  <div class="dashboard-main">
+    <div class="editorial-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Recent articles</h2>
+          <p>Last edited materials, with status and language coverage.</p>
+        </div>
+        <a href="{% url "admin:articles_article_changelist" %}">Open articles</a>
+      </div>
+
+      <div class="article-worklist">
+        {% for article in dashboard.recent_articles %}
+          <a class="worklist-row" href="{% url "admin:articles_article_change" article.pk %}">
+            <span>
+              <strong>{{ article }}</strong>
+              <small>
+                {% if article.issue %}{{ article.issue }} · {% endif %}
+                {% if article.author %}{{ article.author }}{% else %}No author{% endif %}
+              </small>
+            </span>
+            <span class="worklist-meta">
+              <span class="status-pill {% if article.status == "published" %}is-published{% endif %}">{{ article.get_status_display }}</span>
+              <span>{{ article.translations.count }}/3 languages</span>
+            </span>
+          </a>
+        {% empty %}
+          <p class="empty-state">No articles yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="editorial-panel app-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Content library</h2>
+          <p>All admin sections remain available here.</p>
+        </div>
+      </div>
+      <div class="app-list">
+        {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+      </div>
+    </div>
+  </div>
+
+  <aside class="dashboard-side">
+    <div class="editorial-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Current issue</h2>
+          <p>The issue highlighted on the site.</p>
+        </div>
+      </div>
+      {% if dashboard.current_issue %}
+        <p class="issue-title">{{ dashboard.current_issue }}</p>
+        <a class="editorial-button is-wide" href="{% url "admin:core_issue_change" dashboard.current_issue.pk %}">Edit issue</a>
+      {% else %}
+        <p class="empty-state">No current issue selected.</p>
+        <a class="editorial-button is-wide" href="{% url "admin:core_issue_changelist" %}">Choose issue</a>
+      {% endif %}
+    </div>
+
+    <div class="editorial-panel compact-stats">
+      <h2>Publication setup</h2>
+      <dl>
+        <div>
+          <dt>Issues</dt>
+          <dd>{{ dashboard.issue_count }}</dd>
+        </div>
+        <div>
+          <dt>Active categories</dt>
+          <dd>{{ dashboard.active_category_count }}/{{ dashboard.category_count }}</dd>
+        </div>
+        <div>
+          <dt>Authors</dt>
+          <dd>{{ dashboard.author_count }}</dd>
+        </div>
+        <div>
+          <dt>Subscribers</dt>
+          <dd>{{ dashboard.active_subscriber_count }}/{{ dashboard.subscriber_count }}</dd>
+        </div>
+      </dl>
+    </div>
+  </aside>
+</section>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
