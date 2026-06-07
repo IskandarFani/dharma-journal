@@ -2,25 +2,25 @@
 {% load markdown_extras %}
 
 {% block content %}
-<article class="mx-auto max-w-7xl px-6 py-12">
-    <div class="grid gap-10 lg:grid-cols-[1fr_260px]">
+<article class="mx-auto max-w-7xl px-6 py-10 md:py-12">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
         <main>
-            <header class="border-b border-stone-300 pb-8">
+            <header class="border-b hairline pb-8">
                 {% if category_translation %}
                     <a
                         href="{% url 'category_detail' language category_translation.slug %}"
-                        class="text-xs uppercase tracking-[0.3em] text-amber-800 hover:text-stone-950"
+                        class="editorial-kicker text-amber-800 hover:text-stone-950"
                     >
                         {{ category_translation.title }}
                     </a>
                 {% endif %}
 
-                <h2 class="serif mt-5 max-w-4xl text-5xl font-normal leading-tight tracking-tight text-stone-950 md:text-7xl">
+                <h1 class="serif mobile-title-balance mt-5 max-w-4xl text-5xl font-normal leading-[1.02] tracking-tight text-stone-950 md:text-7xl">
                     {{ translation.title }}
-                </h2>
+                </h1>
 
                 {% if translation.subtitle %}
-                    <p class="mt-6 max-w-3xl text-xl leading-8 text-stone-600">
+                    <p class="mt-6 max-w-3xl text-lg leading-8 text-stone-700 md:text-xl">
                         {{ translation.subtitle }}
                     </p>
                 {% endif %}
@@ -57,22 +57,22 @@
                 </figure>
             {% endif %}
 
-            <section class="article-body serif mt-12 max-w-3xl text-xl leading-9 text-stone-800">
+            <section class="article-body serif mt-10 max-w-3xl text-lg leading-8 text-stone-800 md:mt-12 md:text-xl md:leading-9">
                 {{ translation.body|markdown }}
             </section>
         </main>
 
-        <aside class="border-t border-stone-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+        <aside class="border-t hairline pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
             <div class="sticky top-6">
-                <h3 class="text-xs uppercase tracking-[0.3em] text-stone-500">
+                <h3 class="editorial-kicker text-stone-500">
                     {{ ui.related }}
                 </h3>
 
                 <div class="mt-6 space-y-6">
                     {% for card in related_cards %}
-                        <article class="border-b border-stone-300 pb-6">
+                        <article class="article-card border-b hairline pb-6">
                             {% if card.category_translation %}
-                                <div class="text-[11px] uppercase tracking-[0.24em] text-amber-800">
+                                <div class="editorial-kicker text-amber-800">
                                     {{ card.category_translation.title }}
                                 </div>
                             {% endif %}
@@ -87,7 +87,7 @@
                             </h4>
 
                             {% if card.translation.excerpt %}
-                                <p class="mt-3 text-sm leading-6 text-stone-600">
+                                <p class="mt-3 clamp-4 text-sm leading-6 text-stone-600">
                                     {{ card.translation.excerpt }}
                                 </p>
                             {% endif %}

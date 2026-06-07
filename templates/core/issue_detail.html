@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="mx-auto max-w-7xl px-6 py-14">
-    <header class="border-b border-stone-300 pb-10">
-        <div class="text-xs uppercase tracking-[0.35em] text-amber-800">
+<section class="mx-auto max-w-7xl px-6 py-10 md:py-14">
+    <header class="border-b hairline pb-8 md:pb-10">
+        <div class="editorial-kicker text-amber-800">
             {{ ui.current_issue }}
         </div>
 
-        <h2 class="serif mt-5 max-w-4xl text-5xl font-normal leading-tight tracking-tight text-stone-950 md:text-7xl">
+        <h1 class="serif mobile-title-balance mt-5 max-w-4xl text-5xl font-normal leading-[1.02] tracking-tight text-stone-950 md:text-7xl">
             {{ issue_translation.title }}
-        </h2>
+        </h1>
 
         {% if issue_translation.description %}
-            <p class="mt-6 max-w-3xl text-xl leading-8 text-stone-600">
+            <p class="mt-6 max-w-3xl text-lg leading-8 text-stone-700 md:text-xl">
                 {{ issue_translation.description }}
             </p>
         {% endif %}
@@ -32,7 +32,7 @@
         <main>
             <div class="space-y-8">
                 {% for card in article_cards %}
-                    <article class="grid gap-6 border-b border-stone-300 pb-8 md:grid-cols-[180px_1fr]">
+                    <article class="article-card grid gap-6 border-b hairline pb-8 md:grid-cols-[180px_1fr]">
                         <div>
                             <a
                                 href="{% url 'article_detail' language card.translation.slug %}"
@@ -51,8 +51,8 @@
                                         class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
                                     >
                                 {% else %}
-                                    <div class="flex aspect-[4/3] items-center justify-center bg-stone-200 text-[10px] uppercase tracking-[0.25em] text-stone-500 transition duration-500 group-hover:bg-stone-300">
-                                        Sanghaya
+                                    <div class="fallback-cover flex aspect-[4/3] items-center justify-center text-[10px] uppercase tracking-[0.25em] text-stone-500">
+                                        <span>Sanghaya</span>
                                     </div>
                                 {% endif %}
                             </a>
@@ -62,7 +62,7 @@
                             {% if card.category_translation %}
                                 <a
                                     href="{% url 'category_detail' language card.category_translation.slug %}"
-                                    class="text-xs uppercase tracking-[0.25em] text-amber-800 hover:text-stone-950"
+                                    class="editorial-kicker text-amber-800 hover:text-stone-950"
                                 >
                                     {{ card.category_translation.title }}
                                 </a>
@@ -107,9 +107,9 @@
             </div>
         </main>
 
-        <aside class="border-t border-stone-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+        <aside class="border-t hairline pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
             <div class="sticky top-6">
-                <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
+                <div class="editorial-kicker text-stone-500">
                     Sanghaya
                 </div>
 
@@ -123,7 +123,7 @@
                     </p>
                 {% endif %}
 
-                <div class="mt-6 border-t border-stone-300 pt-5 text-xs uppercase tracking-[0.22em] text-stone-500">
+                <div class="mt-6 border-t hairline pt-5 text-xs uppercase tracking-[0.22em] text-stone-500">
                     {{ article_cards|length }} materials
                 </div>
             </div>

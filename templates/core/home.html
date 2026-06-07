@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="mx-auto max-w-7xl px-6 py-12">
-    <div class="grid gap-10 lg:grid-cols-[1.25fr_0.85fr_0.65fr]">
-        <section>
+<section class="mx-auto max-w-7xl px-6 py-8 md:py-12">
+    <div class="grid items-stretch gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(380px,0.82fr)]">
+        <section class="h-full">
             {% if featured_card %}
-                <article>
+                <article class="article-card flex h-full flex-col border-b hairline pb-8 md:border md:p-4">
                     <a
                         href="{% url 'article_detail' language featured_card.translation.slug %}"
                         class="group block overflow-hidden rounded-sm"
@@ -23,19 +23,19 @@
                                 class="aspect-[16/10] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
                             >
                         {% else %}
-                            <div class="flex aspect-[16/10] items-center justify-center bg-stone-200 text-xs uppercase tracking-[0.25em] text-stone-500 transition duration-500 group-hover:bg-stone-300">
-                                Sanghaya
+                            <div class="fallback-cover flex aspect-[16/10] items-center justify-center text-xs uppercase tracking-[0.3em] text-stone-600">
+                                <span>Sanghaya</span>
                             </div>
                         {% endif %}
                     </a>
 
                     {% if featured_card.category_translation %}
-                        <div class="mt-6 text-xs uppercase tracking-[0.3em] text-amber-800">
+                        <div class="editorial-kicker mt-6 text-amber-800">
                             {{ featured_card.category_translation.title }}
                         </div>
                     {% endif %}
 
-                    <h2 class="serif mt-3 text-5xl font-normal leading-tight tracking-tight text-stone-950">
+                    <h2 class="serif mobile-title-balance mt-3 max-w-3xl text-5xl font-normal leading-[1.02] tracking-tight text-stone-950 md:text-5xl 2xl:text-6xl">
                         <a
                             href="{% url 'article_detail' language featured_card.translation.slug %}"
                             class="hover:text-amber-900"
@@ -45,12 +45,12 @@
                     </h2>
 
                     {% if featured_card.translation.excerpt %}
-                        <p class="mt-5 text-lg leading-8 text-stone-700">
+                        <p class="mt-5 max-w-2xl text-base leading-7 text-stone-700 md:text-lg md:leading-8">
                             {{ featured_card.translation.excerpt }}
                         </p>
                     {% endif %}
 
-                    <div class="mt-7 text-xs uppercase tracking-[0.22em] text-stone-500">
+                    <div class="mt-6 text-xs uppercase tracking-[0.2em] text-stone-500">
                         {% if featured_card.article.author %}
                             {{ ui.author }}: {{ featured_card.article.author.name }}
                         {% else %}
@@ -66,8 +66,8 @@
                     </div>
                 </article>
             {% else %}
-                <article class="border border-stone-300 p-8">
-                    <div class="text-xs uppercase tracking-[0.3em] text-amber-800">
+                <article class="border hairline p-8">
+                    <div class="editorial-kicker text-amber-800">
                         {{ ui.featured }}
                     </div>
 
@@ -82,33 +82,58 @@
             {% endif %}
         </section>
 
-        <section class="space-y-8">
+        <section class="grid gap-4 md:grid-cols-3 xl:h-full xl:grid-cols-1 xl:grid-rows-3">
             {% for card in secondary_cards %}
-                <article class="border-b border-stone-300 pb-8">
-                    {% if card.category_translation %}
-                        <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
-                            {{ card.category_translation.title }}
-                        </div>
-                    {% endif %}
+                <article class="article-card grid gap-4 border-b hairline pb-5 md:border md:p-4 xl:min-h-0 xl:grid-cols-[minmax(180px,0.44fr)_1fr]">
+                    <a
+                        href="{% url 'article_detail' language card.translation.slug %}"
+                        class="group block overflow-hidden rounded-sm xl:h-full"
+                    >
+                        {% if card.article.cover_image %}
+                            <img
+                                src="{{ card.article.cover_image.url }}"
+                                alt="{{ card.translation.title }}"
+                                class="aspect-[16/7] w-full object-cover transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
+                            >
+                        {% elif card.article.category.cover_image %}
+                            <img
+                                src="{{ card.article.category.cover_image.url }}"
+                                alt="{{ card.translation.title }}"
+                                class="aspect-[16/7] w-full object-cover transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
+                            >
+                        {% else %}
+                            <div class="fallback-cover flex aspect-[16/7] items-center justify-center text-[10px] uppercase tracking-[0.22em] text-stone-500 md:aspect-[4/3] xl:h-full xl:aspect-auto">
+                                <span>{% if card.category_translation %}{{ card.category_translation.title }}{% else %}Sanghaya{% endif %}</span>
+                            </div>
+                        {% endif %}
+                    </a>
 
-                    <h3 class="serif mt-3 text-2xl leading-snug text-stone-950">
-                        <a
-                            href="{% url 'article_detail' language card.translation.slug %}"
-                            class="hover:text-amber-900"
-                        >
-                            {{ card.translation.title }}
-                        </a>
-                    </h3>
+                    <div class="xl:flex xl:min-w-0 xl:flex-col xl:justify-center">
+                        {% if card.category_translation %}
+                            <div class="editorial-kicker text-stone-500">
+                                {{ card.category_translation.title }}
+                            </div>
+                        {% endif %}
 
-                    {% if card.translation.excerpt %}
-                        <p class="mt-4 text-sm leading-6 text-stone-600">
-                            {{ card.translation.excerpt }}
-                        </p>
-                    {% endif %}
+                        <h3 class="serif mt-2 text-2xl leading-tight text-stone-950 md:text-xl xl:text-[1.55rem]">
+                            <a
+                                href="{% url 'article_detail' language card.translation.slug %}"
+                                class="hover:text-amber-900"
+                            >
+                                {{ card.translation.title }}
+                            </a>
+                        </h3>
+
+                        {% if card.translation.excerpt %}
+                            <p class="mt-3 clamp-4 text-sm leading-6 text-stone-600 xl:leading-5">
+                                {{ card.translation.excerpt }}
+                            </p>
+                        {% endif %}
+                    </div>
                 </article>
             {% empty %}
-                <article class="border-b border-stone-300 pb-8">
-                    <div class="text-xs uppercase tracking-[0.3em] text-stone-500">
+                <article class="border-b hairline pb-8">
+                    <div class="editorial-kicker text-stone-500">
                         {{ ui.materials }}
                     </div>
 
@@ -123,15 +148,18 @@
             {% endfor %}
         </section>
 
-        <aside class="border-t border-stone-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-            <h3 class="text-xs uppercase tracking-[0.3em] text-stone-500">
+    </div>
+
+    <aside class="mt-10 border-y hairline py-6 md:mt-12">
+        <div class="grid gap-5 md:grid-cols-[180px_1fr] md:items-start">
+            <h3 class="editorial-kicker text-stone-500">
                 {{ ui.latest }}
             </h3>
 
-            <div class="mt-6 space-y-6">
+            <div class="grid gap-5 md:grid-cols-3">
                 {% for card in latest_cards %}
-                    <article>
-                        <h4 class="serif text-xl leading-snug text-stone-950">
+                    <article class="article-card border-t hairline pt-4 md:border-l md:border-t-0 md:pl-5 md:pt-0">
+                        <h4 class="serif text-xl leading-snug text-stone-950 md:text-lg">
                             <a
                                 href="{% url 'article_detail' language card.translation.slug %}"
                                 class="hover:text-amber-900"
@@ -148,22 +176,22 @@
                     </article>
                 {% endfor %}
             </div>
-        </aside>
-    </div>
+        </div>
+    </aside>
 
-    <section class="mt-16 border-y border-stone-300 py-10">
+    <section class="mt-14 border-b hairline pb-8 md:mt-16 md:pb-10">
         <div class="grid gap-8 md:grid-cols-[0.8fr_1fr] md:items-center">
             <div>
-                <div class="text-xs uppercase tracking-[0.3em] text-amber-800">
+                <div class="editorial-kicker text-amber-800">
                     {{ ui.current_issue }}
                 </div>
 
                 {% if current_issue_card %}
-                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950">
+                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950 md:text-5xl">
                         {{ current_issue_card.translation.title }}
                     </h2>
                 {% else %}
-                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950">
+                    <h2 class="serif mt-4 text-4xl leading-tight text-stone-950 md:text-5xl">
                         {{ ui.issue_title }}
                     </h2>
                 {% endif %}
@@ -171,11 +199,11 @@
 
             <div>
                 {% if current_issue_card and current_issue_card.translation.description %}
-                    <p class="text-lg leading-8 text-stone-700">
+                    <p class="text-base leading-7 text-stone-700 md:text-lg md:leading-8">
                         {{ current_issue_card.translation.description }}
                     </p>
                 {% else %}
-                    <p class="text-lg leading-8 text-stone-700">
+                    <p class="text-base leading-7 text-stone-700 md:text-lg md:leading-8">
                         {{ ui.issue_text }}
                     </p>
                 {% endif %}
@@ -196,10 +224,10 @@
         </div>
     </section>
 
-    <section id="subscribe" class="mt-16 bg-stone-950 px-8 py-12 text-stone-50">
+    <section id="subscribe" class="mt-14 bg-stone-950 px-6 py-10 text-stone-50 md:mt-16 md:px-8 md:py-12">
         <div class="grid gap-8 md:grid-cols-[1fr_1.5fr] md:items-center">
             <div>
-                <div class="text-xs uppercase tracking-[0.3em] text-stone-400">
+                <div class="editorial-kicker text-stone-400">
                     {{ ui.subscription }}
                 </div>
 

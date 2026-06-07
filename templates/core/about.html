@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="mx-auto max-w-7xl px-6 py-14">
+<section class="mx-auto max-w-7xl px-6 py-10 md:py-14">
     <div class="mx-auto max-w-3xl">
-        <div class="border-b border-stone-300 pb-8 text-center">
-            <div class="text-xs uppercase tracking-[0.35em] text-amber-800">
+        <div class="border-b hairline pb-8 text-center">
+            <div class="editorial-kicker text-amber-800">
                 {{ ui.about_kicker }}
             </div>
 
-            <h2 class="serif mt-4 text-4xl md:text-6xl font-normal tracking-tight text-stone-950">
+            <h1 class="serif mobile-title-balance mt-4 text-4xl font-normal tracking-tight text-stone-950 md:text-6xl">
                 {{ ui.about_title }}
-            </h2>
+            </h1>
         </div>
 
-        <article class="serif mt-10 space-y-7 text-xl leading-9 text-stone-800">
+        <article class="serif mt-10 space-y-7 text-lg leading-8 text-stone-800 md:text-xl md:leading-9">
             {% for paragraph in about_content %}
                 <p>
                     {{ paragraph }}
@@ -21,7 +21,7 @@
             {% endfor %}
         </article>
 
-        <div class="mt-12 border-t border-stone-300 pt-8 text-center">
+        <div class="mt-12 border-t hairline pt-8 text-center">
             <a
                 href="{% url 'home' language %}"
                 class="text-xs uppercase tracking-[0.25em] text-stone-600 hover:text-stone-950"

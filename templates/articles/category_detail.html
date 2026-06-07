@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
-{% block title %}{{ category_translation.title }} — Sanghaya{% endblock %}
+{% block title %}{{ category_translation.title }} | Sanghaya{% endblock %}
 
 {% block content %}
-<main class="mx-auto max-w-6xl px-6 py-14">
-    <section class="mx-auto max-w-3xl text-center">
-        <p class="mb-5 text-xs uppercase tracking-[0.3em] text-amber-800">
-            {{ ui.category }}
-        </p>
+<main class="mx-auto max-w-7xl px-6 py-10 md:py-14">
+    <section class="border-b hairline pb-8 md:grid md:grid-cols-[0.75fr_1fr] md:items-end md:gap-10">
+        <div>
+            <p class="editorial-kicker mb-5 text-amber-800">
+                {{ ui.category }}
+            </p>
 
-        <h1 class="serif text-5xl leading-tight md:text-7xl">
-            {{ category_translation.title }}
-        </h1>
+            <h1 class="serif mobile-title-balance text-5xl leading-[1.02] md:text-7xl">
+                {{ category_translation.title }}
+            </h1>
+        </div>
 
         {% if category_translation.description %}
-            <p class="mx-auto mt-6 max-w-2xl text-xl leading-8 text-stone-700">
+            <p class="mt-6 max-w-2xl text-lg leading-8 text-stone-700 md:mt-0 md:text-xl">
                 {{ category_translation.description }}
             </p>
         {% endif %}
@@ -25,33 +27,35 @@
             <img
                 src="{{ category_translation.category.cover_image.url }}"
                 alt="{{ category_translation.title }}"
-                class="aspect-[16/6] w-full object-cover"
+                class="aspect-[16/7] w-full object-cover"
             >
         </section>
     {% endif %}
 
-    <section class="mt-14 grid gap-8 md:grid-cols-2">
+    <section class="mt-10 grid gap-6 md:mt-12 md:grid-cols-2 xl:grid-cols-3">
         {% for card in article_cards %}
-            <article class="border-t border-stone-300 pt-6">
-                {% if card.article.cover_image %}
-                    <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden bg-stone-300">
+            <article class="article-card border-t hairline pt-5 md:border md:p-4">
+                <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden rounded-sm">
+                    {% if card.article.cover_image %}
                         <img
                             src="{{ card.article.cover_image.url }}"
                             alt="{{ card.translation.title }}"
-                            class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                            class="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.025]"
                         >
-                    </a>
-                {% elif card.article.category.cover_image %}
-                    <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden bg-stone-300">
+                    {% elif card.article.category.cover_image %}
                         <img
                             src="{{ card.article.category.cover_image.url }}"
                             alt="{{ card.translation.title }}"
-                            class="aspect-[16/9] w-full object-cover transition duration-300 hover:scale-[1.02]"
+                            class="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.025]"
                         >
-                    </a>
-                {% endif %}
+                    {% else %}
+                        <div class="fallback-cover flex aspect-[16/10] items-center justify-center text-xs uppercase tracking-[0.25em] text-stone-500">
+                            <span>Sanghaya</span>
+                        </div>
+                    {% endif %}
+                </a>
 
-                <p class="mb-3 text-xs uppercase tracking-[0.25em] text-stone-500">
+                <p class="editorial-kicker mb-3 text-stone-500">
                     {% if card.article.published_at %}
                         {{ card.article.published_at|date:"d.m.Y" }}
                     {% else %}
@@ -72,7 +76,7 @@
                 {% endif %}
 
                 {% if card.translation.excerpt %}
-                    <p class="mt-4 text-base leading-7 text-stone-700">
+                    <p class="mt-4 clamp-4 text-base leading-7 text-stone-700">
                         {{ card.translation.excerpt }}
                     </p>
                 {% endif %}
@@ -86,7 +90,7 @@
                 </p>
             </article>
         {% empty %}
-            <div class="md:col-span-2 border-t border-stone-300 pt-8 text-center">
+            <div class="border-t hairline pt-8 text-center md:col-span-2 xl:col-span-3">
                 <p class="text-base leading-7 text-stone-600">
                     {{ ui.no_published }}
                 </p>
