@@ -29,9 +29,26 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             background: #f6f0e6;
             color: #1c1917;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
         }
 
         .serif {
@@ -109,8 +126,11 @@
 
         @media (max-width: 767px) {
             .mobile-title-balance {
-                font-size: clamp(2.25rem, 12vw, 3.65rem);
-                line-height: 0.98;
+                font-size: clamp(2.15rem, 10.6vw, 3.35rem);
+                line-height: 1;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+                hyphens: auto;
             }
         }
     </style>
@@ -118,13 +138,13 @@
 
 <body class="sans min-h-screen">
     <header class="border-b hairline">
-        <div class="mx-auto max-w-7xl px-6 py-4 md:py-5">
-            <div class="flex items-center justify-between gap-6 text-xs uppercase tracking-[0.25em] text-stone-600">
+        <div class="mx-auto max-w-7xl min-w-0 px-4 py-4 md:px-6 md:py-5">
+            <div class="flex min-w-0 items-center justify-between gap-3 text-xs uppercase tracking-[0.16em] text-stone-600 md:tracking-[0.25em]">
                 <a href="{% url 'about' language %}" class="transition duration-300 hover:text-stone-950">
                     {{ ui.about }}
                 </a>
 
-                <div class="flex items-center gap-3">
+                <div class="flex shrink-0 items-center gap-3">
                     {% for item in language_links %}
                         <a
                             href="{{ item.url }}"
@@ -136,9 +156,9 @@
                 </div>
             </div>
 
-            <div class="py-8 text-center md:py-10">
+            <div class="min-w-0 py-8 text-center md:py-10">
                 <a href="{% url 'home' language %}" class="group inline-block">
-                    <div class="text-xs uppercase tracking-[0.35em] text-amber-800 transition duration-300 group-hover:text-amber-900">
+                    <div class="text-xs uppercase tracking-[0.24em] text-amber-800 transition duration-300 group-hover:text-amber-900 md:tracking-[0.35em]">
                         {{ ui.journal_label }}
                     </div>
 
@@ -147,7 +167,7 @@
                     </h1>
                 </a>
 
-                <p class="mx-auto mt-5 max-w-2xl text-sm leading-7 text-stone-600">
+                <p class="mx-auto mt-5 max-w-2xl px-2 text-sm leading-7 text-stone-600 break-words">
                     {{ ui.site_subtitle }}
                 </p>
             </div>
@@ -164,7 +184,7 @@
             </nav>
 
             <details class="border-t hairline pt-4 md:hidden">
-                <summary class="flex cursor-pointer items-center justify-between text-xs uppercase tracking-[0.25em] text-stone-700">
+                <summary class="flex cursor-pointer items-center justify-between text-xs uppercase tracking-[0.18em] text-stone-700">
                     <span>{{ ui.menu }}</span>
                     <span class="text-base leading-none">+</span>
                 </summary>

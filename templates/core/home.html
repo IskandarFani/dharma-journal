@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="mx-auto max-w-7xl px-6 py-8 md:py-12">
-    <div class="grid items-stretch gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(380px,0.82fr)]">
-        <section class="h-full">
+<section class="mx-auto max-w-7xl min-w-0 px-4 py-8 md:px-6 md:py-12">
+    <div class="grid min-w-0 items-stretch gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(380px,0.82fr)]">
+        <section class="h-full min-w-0">
             {% if featured_card %}
-                <article class="article-card flex h-full flex-col border-b hairline pb-8 md:border md:p-4">
+                <article class="article-card flex h-full min-w-0 flex-col border-b hairline pb-8 md:border md:p-4">
                     <a
                         href="{% url 'article_detail' language featured_card.translation.slug %}"
                         class="group block overflow-hidden rounded-sm"
@@ -35,7 +35,7 @@
                         </div>
                     {% endif %}
 
-                    <h2 class="serif mobile-title-balance mt-3 max-w-3xl text-5xl font-normal leading-[1.02] tracking-tight text-stone-950 md:text-5xl 2xl:text-6xl">
+                    <h2 class="serif mobile-title-balance mt-3 max-w-3xl break-words text-5xl font-normal leading-[1.02] tracking-tight text-stone-950 md:text-[3.35rem] 2xl:text-[3.9rem]">
                         <a
                             href="{% url 'article_detail' language featured_card.translation.slug %}"
                             class="hover:text-amber-900"
@@ -50,7 +50,7 @@
                         </p>
                     {% endif %}
 
-                    <div class="mt-6 text-xs uppercase tracking-[0.2em] text-stone-500">
+                    <div class="mt-6 break-words text-xs uppercase tracking-[0.2em] text-stone-500">
                         {% if featured_card.article.author %}
                             {{ ui.author }}: {{ featured_card.article.author.name }}
                         {% else %}
@@ -82,9 +82,9 @@
             {% endif %}
         </section>
 
-        <section class="grid gap-4 md:grid-cols-3 xl:h-full xl:grid-cols-1 xl:grid-rows-3">
+        <section class="grid min-w-0 gap-4 md:grid-cols-3 xl:h-full xl:grid-cols-1 xl:grid-rows-3">
             {% for card in secondary_cards %}
-                <article class="article-card grid gap-4 border-b hairline pb-5 md:border md:p-4 xl:min-h-0 xl:grid-cols-[minmax(180px,0.44fr)_1fr]">
+                <article class="article-card grid min-w-0 gap-4 border-b hairline pb-5 md:border md:p-4 xl:min-h-0 xl:grid-cols-[minmax(180px,0.44fr)_1fr]">
                     <a
                         href="{% url 'article_detail' language card.translation.slug %}"
                         class="group block overflow-hidden rounded-sm xl:h-full"
@@ -108,14 +108,14 @@
                         {% endif %}
                     </a>
 
-                    <div class="xl:flex xl:min-w-0 xl:flex-col xl:justify-center">
+                    <div class="min-w-0 xl:flex xl:flex-col xl:justify-center">
                         {% if card.category_translation %}
                             <div class="editorial-kicker text-stone-500">
                                 {{ card.category_translation.title }}
                             </div>
                         {% endif %}
 
-                        <h3 class="serif mt-2 text-2xl leading-tight text-stone-950 md:text-xl xl:text-[1.55rem]">
+                        <h3 class="serif mt-2 break-words text-2xl leading-tight text-stone-950 md:text-xl xl:text-[1.55rem]">
                             <a
                                 href="{% url 'article_detail' language card.translation.slug %}"
                                 class="hover:text-amber-900"
