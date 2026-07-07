@@ -425,6 +425,10 @@ body.model-article.change-form #translations-group[data-tabs-ready="true"] .inli
     display: none;
 }
 
+body.model-article.change-form #translations-group.translations-complete .add-row {
+    display: none;
+}
+
 body.model-article.change-form .aligned .form-row {
     display: block;
     padding: 10px 12px;

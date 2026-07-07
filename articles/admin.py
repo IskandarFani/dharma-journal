@@ -123,6 +123,7 @@ class AuthorAdmin(admin.ModelAdmin):
 class ArticleTranslationInline(admin.StackedInline):
     model = ArticleTranslation
     extra = 0
+    max_num = 3
     prepopulated_fields = {"slug": ("title",)}
     fieldsets = (
         (

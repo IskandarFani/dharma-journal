@@ -5,24 +5,31 @@
         lt: "LT",
     };
 
+    const languageOrder = ["ru", "en", "lt"];
+    const storageKey = `article-translation-tab:${window.location.pathname}`;
+
+    function getGroup() {
+        return document.querySelector("#translations-group");
+    }
+
+    function getRoot(group) {
+        return group.querySelector(":scope > fieldset.module") || group;
+    }
+
+    function getPanels(group) {
+        return Array.from(getRoot(group).querySelectorAll(".inline-related")).filter(
+            (panel) => !panel.classList.contains("empty-form")
+        );
+    }
+
     function getPanelLanguage(panel) {
         const select = panel.querySelector('select[name$="-language"]');
-
-        if (!select || !select.value) {
-            return "new";
-        }
-
-        return select.value;
+        return select && select.value ? select.value : "";
     }
 
     function getPanelLabel(panel, index) {
         const language = getPanelLanguage(panel);
-
-        if (languageLabels[language]) {
-            return languageLabels[language];
-        }
-
-        return `New ${index + 1}`;
+        return languageLabels[language] || `New ${index + 1}`;
     }
 
     function getPanelTitle(panel) {
@@ -35,37 +42,140 @@
         return "Untitled translation";
     }
 
-    function activateTab(group, panelId) {
-        group.querySelectorAll(".translation-tab").forEach((tab) => {
-            const isActive = tab.dataset.target === panelId;
-            tab.classList.toggle("is-active", isActive);
-            tab.setAttribute("aria-selected", isActive ? "true" : "false");
-        });
+    function getPanelKey(panel) {
+        const language = getPanelLanguage(panel);
+        const idInput = panel.querySelector('input[name$="-id"]');
 
-        group.querySelectorAll(".inline-related").forEach((panel) => {
-            panel.classList.toggle("is-active-translation", panel.id === panelId);
+        if (language) {
+            return `language:${language}`;
+        }
+
+        if (idInput && idInput.value) {
+            return `id:${idInput.value}`;
+        }
+
+        return panel.id || "";
+    }
+
+    function ensurePanelIds(panels) {
+        panels.forEach((panel, index) => {
+            if (!panel.id) {
+                panel.id = `translation-panel-${index}`;
+            }
         });
     }
 
-    function buildTabs(group) {
-        if (!group || group.dataset.tabsReady === "true") {
+    function getActivePanel(group) {
+        return group.querySelector(".inline-related.is-active-translation");
+    }
+
+    function activateTab(group, panelId) {
+        const panels = getPanels(group);
+        const activePanel = panels.find((panel) => panel.id === panelId) || panels[0];
+
+        if (!activePanel) {
             return;
         }
 
-        const root = group.querySelector(":scope > fieldset.module") || group;
-        const panels = Array.from(root.querySelectorAll(".inline-related")).filter(
-            (panel) => !panel.classList.contains("empty-form")
+        group.querySelectorAll(".translation-tab").forEach((tab) => {
+            const isActive = tab.dataset.target === activePanel.id;
+            tab.classList.toggle("is-active", isActive);
+            tab.setAttribute("aria-selected", isActive ? "true" : "false");
+            tab.tabIndex = isActive ? 0 : -1;
+        });
+
+        panels.forEach((panel) => {
+            panel.classList.toggle("is-active-translation", panel.id === activePanel.id);
+        });
+
+        sessionStorage.setItem(storageKey, getPanelKey(activePanel));
+    }
+
+    function choosePanelToActivate(group, preferredPanel) {
+        const panels = getPanels(group);
+
+        if (preferredPanel && panels.includes(preferredPanel)) {
+            return preferredPanel;
+        }
+
+        const activePanel = getActivePanel(group);
+
+        if (activePanel && panels.includes(activePanel)) {
+            return activePanel;
+        }
+
+        const storedKey = sessionStorage.getItem(storageKey);
+
+        if (storedKey) {
+            const storedPanel = panels.find((panel) => getPanelKey(panel) === storedKey);
+
+            if (storedPanel) {
+                return storedPanel;
+            }
+        }
+
+        return panels[0];
+    }
+
+    function assignMissingLanguage(group, panel) {
+        const select = panel.querySelector('select[name$="-language"]');
+
+        if (!select || select.value) {
+            return;
+        }
+
+        const usedLanguages = new Set(
+            getPanels(group)
+                .filter((candidate) => candidate !== panel)
+                .map(getPanelLanguage)
+                .filter(Boolean)
         );
+        const missingLanguage = languageOrder.find((language) => !usedLanguages.has(language));
 
-        if (panels.length < 2) {
+        if (missingLanguage) {
+            select.value = missingLanguage;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    }
+
+    function updateTotalForms(group) {
+        const totalForms = group.querySelector('input[name$="-TOTAL_FORMS"]');
+
+        if (!totalForms) {
             return;
         }
 
-        const existingTabs = group.querySelector(".translation-tabs");
+        const panels = getPanels(group);
+        const visibleCount = panels.length;
+        const maxForms = Number(group.querySelector('input[name$="-MAX_NUM_FORMS"]')?.value || 0);
 
-        if (existingTabs) {
-            existingTabs.remove();
+        if (maxForms && visibleCount >= maxForms) {
+            group.classList.add("translations-complete");
+        } else {
+            group.classList.remove("translations-complete");
         }
+    }
+
+    function buildTabs(group, options) {
+        if (!group) {
+            return;
+        }
+
+        const root = getRoot(group);
+        const panels = getPanels(group);
+        const preferredPanel = options && options.preferredPanel;
+        const previousTabs = group.querySelector(".translation-tabs");
+
+        if (previousTabs) {
+            previousTabs.remove();
+        }
+
+        if (panels.length === 0) {
+            group.dataset.tabsReady = "false";
+            return;
+        }
+
+        ensurePanelIds(panels);
 
         const tabs = document.createElement("div");
         tabs.className = "translation-tabs";
@@ -73,10 +183,6 @@
         tabs.setAttribute("aria-label", "Article translations");
 
         panels.forEach((panel, index) => {
-            if (!panel.id) {
-                panel.id = `translation-panel-${index}`;
-            }
-
             const tab = document.createElement("button");
             tab.type = "button";
             tab.className = "translation-tab";
@@ -85,32 +191,70 @@
             tab.setAttribute("aria-controls", panel.id);
             tab.innerHTML = `<strong>${getPanelLabel(panel, index)}</strong><span>${getPanelTitle(panel)}</span>`;
             tab.addEventListener("click", () => activateTab(group, panel.id));
-
             tabs.appendChild(tab);
         });
 
         const heading = root.querySelector(":scope > h2");
 
-        if (!heading) {
+        if (heading) {
+            heading.insertAdjacentElement("afterend", tabs);
+        } else {
+            root.insertAdjacentElement("afterbegin", tabs);
+        }
+
+        group.dataset.tabsReady = "true";
+        updateTotalForms(group);
+        activateTab(group, choosePanelToActivate(group, preferredPanel).id);
+    }
+
+    function refreshTabs(event) {
+        const group = getGroup();
+
+        if (!group) {
             return;
         }
 
-        heading.insertAdjacentElement("afterend", tabs);
-        group.dataset.tabsReady = "true";
-        activateTab(group, panels[0].id);
+        if (
+            event.target.matches(
+                'select[name$="-language"], input[name$="-title"], input[name$="-DELETE"]'
+            )
+        ) {
+            buildTabs(group);
+        }
+    }
 
-        group.addEventListener("change", (event) => {
-            if (event.target.matches('select[name$="-language"], input[name$="-title"]')) {
-                group.dataset.tabsReady = "false";
-                buildTabs(group);
-            }
-        });
+    function focusNewPanel(panel) {
+        const firstEditable = panel.querySelector(
+            'select[name$="-language"], input[name$="-title"], textarea, input:not([type="hidden"])'
+        );
+
+        if (firstEditable) {
+            firstEditable.focus();
+        }
     }
 
     function initTranslationTabs() {
-        buildTabs(document.querySelector("#translations-group"));
+        buildTabs(getGroup());
     }
 
     window.addEventListener("load", initTranslationTabs);
-    document.addEventListener("formset:added", initTranslationTabs);
+    document.addEventListener("change", refreshTabs);
+    document.addEventListener("input", (event) => {
+        if (event.target.matches('input[name$="-title"]')) {
+            buildTabs(getGroup());
+        }
+    });
+    document.addEventListener("formset:added", (event) => {
+        const group = getGroup();
+        const panel = event.target.closest(".inline-related");
+
+        if (!group || !panel || !group.contains(panel)) {
+            return;
+        }
+
+        assignMissingLanguage(group, panel);
+        buildTabs(group, { preferredPanel: panel });
+        panel.scrollIntoView({ block: "start", behavior: "smooth" });
+        focusNewPanel(panel);
+    });
 })();
