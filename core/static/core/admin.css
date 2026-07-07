@@ -429,6 +429,17 @@ body.model-article.change-form #translations-group.translations-complete .add-ro
     display: none;
 }
 
+body.model-article.change-form #translations-group .translation-complete-note {
+    margin: 10px 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--hairline-color);
+    border-radius: 8px;
+    background: var(--darkened-bg);
+    color: var(--body-quiet-color);
+    font-size: 12px;
+    font-weight: 800;
+}
+
 body.model-article.change-form .aligned .form-row {
     display: block;
     padding: 10px 12px;

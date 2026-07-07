@@ -7,6 +7,8 @@
 
     const languageOrder = ["ru", "en", "lt"];
     const storageKey = `article-translation-tab:${window.location.pathname}`;
+    let knownPanelCount = 0;
+    let pendingAddedCheck = null;
 
     function getGroup() {
         return document.querySelector("#translations-group");
@@ -148,12 +150,59 @@
         const panels = getPanels(group);
         const visibleCount = panels.length;
         const maxForms = Number(group.querySelector('input[name$="-MAX_NUM_FORMS"]')?.value || 0);
+        const addRow = group.querySelector(".add-row");
+        let completeNote = group.querySelector(".translation-complete-note");
 
         if (maxForms && visibleCount >= maxForms) {
             group.classList.add("translations-complete");
+
+            if (addRow && !completeNote) {
+                completeNote = document.createElement("div");
+                completeNote.className = "translation-complete-note";
+                completeNote.textContent = "All 3 language versions are added.";
+                addRow.insertAdjacentElement("afterend", completeNote);
+            }
         } else {
             group.classList.remove("translations-complete");
+
+            if (completeNote) {
+                completeNote.remove();
+            }
         }
+    }
+
+    function showPanel(group, panel) {
+        if (!group || !panel) {
+            return;
+        }
+
+        assignMissingLanguage(group, panel);
+        buildTabs(group, { preferredPanel: panel });
+        panel.scrollIntoView({ block: "start", behavior: "smooth" });
+        focusNewPanel(panel);
+    }
+
+    function detectAddedPanel(group) {
+        if (!group) {
+            return;
+        }
+
+        const panels = getPanels(group);
+
+        if (panels.length > knownPanelCount) {
+            showPanel(group, panels[panels.length - 1]);
+            return;
+        }
+
+        buildTabs(group);
+    }
+
+    function scheduleAddedPanelCheck() {
+        window.clearTimeout(pendingAddedCheck);
+
+        pendingAddedCheck = window.setTimeout(() => {
+            detectAddedPanel(getGroup());
+        }, 80);
     }
 
     function buildTabs(group, options) {
@@ -204,6 +253,7 @@
 
         group.dataset.tabsReady = "true";
         updateTotalForms(group);
+        knownPanelCount = panels.length;
         activateTab(group, choosePanelToActivate(group, preferredPanel).id);
     }
 
@@ -238,6 +288,11 @@
     }
 
     window.addEventListener("load", initTranslationTabs);
+    document.addEventListener("click", (event) => {
+        if (event.target.closest("#translations-group .add-row a")) {
+            scheduleAddedPanelCheck();
+        }
+    });
     document.addEventListener("change", refreshTabs);
     document.addEventListener("input", (event) => {
         if (event.target.matches('input[name$="-title"]')) {
@@ -246,15 +301,51 @@
     });
     document.addEventListener("formset:added", (event) => {
         const group = getGroup();
-        const panel = event.target.closest(".inline-related");
 
-        if (!group || !panel || !group.contains(panel)) {
+        if (!group) {
+            scheduleAddedPanelCheck();
             return;
         }
 
-        assignMissingLanguage(group, panel);
-        buildTabs(group, { preferredPanel: panel });
-        panel.scrollIntoView({ block: "start", behavior: "smooth" });
-        focusNewPanel(panel);
+        const target = event.target;
+        const panel =
+            target.closest && target.closest(".inline-related")
+                ? target.closest(".inline-related")
+                : getPanels(group).at(-1);
+
+        if (!panel || !group.contains(panel)) {
+            scheduleAddedPanelCheck();
+            return;
+        }
+
+        showPanel(group, panel);
+    });
+
+    const observer = new MutationObserver((mutations) => {
+        const group = getGroup();
+
+        if (!group) {
+            return;
+        }
+
+        const addedInline = mutations.some((mutation) =>
+            Array.from(mutation.addedNodes).some(
+                (node) =>
+                    node.nodeType === Node.ELEMENT_NODE &&
+                    (node.matches?.(".inline-related") || node.querySelector?.(".inline-related"))
+            )
+        );
+
+        if (addedInline) {
+            scheduleAddedPanelCheck();
+        }
+    });
+
+    window.addEventListener("load", () => {
+        const group = getGroup();
+
+        if (group) {
+            observer.observe(group, { childList: true, subtree: true });
+        }
     });
 })();
