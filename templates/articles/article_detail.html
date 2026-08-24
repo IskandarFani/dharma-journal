@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load markdown_extras %}
+{% load image_extras %}
 
 {% block title %}{{ translation.title }} | Sanghaya{% endblock %}
 
@@ -43,19 +44,38 @@
                 </div>
             </div>
 
-            {% if article.cover_image %}
-                <figure class="min-w-0 lg:self-stretch">
-                    <img
-                        src="{{ article.cover_image.url }}"
-                        alt="{{ translation.title }}"
-                        class="aspect-[16/10] h-full w-full rounded-sm object-cover"
-                    >
+            {% if gallery_images %}
+                <figure class="article-gallery min-w-0 lg:self-stretch">
+                    <div class="article-gallery-track">
+                        {% for gallery_image in gallery_images %}
+                            <div
+                                id="article-image-{{ forloop.counter }}"
+                                class="article-gallery-slide {{ gallery_image.image|image_frame:1.6 }}"
+                            >
+                                <img
+                                    src="{{ gallery_image.url }}"
+                                    alt="{{ gallery_image.alt }}"
+                                    class="aspect-[16/10] h-full w-full {{ gallery_image.image|image_fit:1.6 }}"
+                                >
+                            </div>
+                        {% endfor %}
+                    </div>
 
-                    {% if article.cover_caption %}
-                        <figcaption class="mt-3 text-sm leading-6 text-stone-500">
-                            {{ article.cover_caption }}
-                        </figcaption>
+                    {% if gallery_images|length > 1 %}
+                        <nav class="article-gallery-nav" aria-label="Article gallery">
+                            {% for gallery_image in gallery_images %}
+                                <a href="#article-image-{{ forloop.counter }}" aria-label="Image {{ forloop.counter }}"></a>
+                            {% endfor %}
+                        </nav>
                     {% endif %}
+
+                    {% for gallery_image in gallery_images %}
+                        {% if forloop.first and gallery_image.caption %}
+                            <figcaption class="mt-3 text-sm leading-6 text-stone-500">
+                                {{ gallery_image.caption }}
+                            </figcaption>
+                        {% endif %}
+                    {% endfor %}
                 </figure>
             {% endif %}
         </div>
@@ -169,6 +189,47 @@
 
     .article-body em {
         font-style: italic;
+    }
+
+    .article-gallery-track {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .article-gallery-track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .article-gallery-slide {
+        min-width: 100%;
+        overflow: hidden;
+        border-radius: 0.125rem;
+        scroll-snap-align: start;
+    }
+
+    .article-gallery-nav {
+        display: flex;
+        justify-content: center;
+        gap: 0.55rem;
+        margin-top: 0.9rem;
+    }
+
+    .article-gallery-nav a {
+        width: 0.55rem;
+        height: 0.55rem;
+        border: 1px solid #a8a29e;
+        border-radius: 999px;
+        background: transparent;
+    }
+
+    .article-gallery-nav a:focus,
+    .article-gallery-nav a:hover {
+        border-color: #92400e;
+        background: #92400e;
+        outline: none;
     }
 
     .article-body hr {

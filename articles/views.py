@@ -111,7 +111,8 @@ def article_detail(request, language, slug):
     language = normalize_language(language)
 
     translation = get_object_or_404(
-        ArticleTranslation.objects.select_related("article", "article__category", "article__author"),
+        ArticleTranslation.objects.select_related("article", "article__category", "article__author")
+        .prefetch_related("article__images"),
         language=language,
         slug=slug,
         article__status=Article.Status.PUBLISHED,
@@ -119,6 +120,28 @@ def article_detail(request, language, slug):
 
     article = translation.article
     category_translation = article.category.get_translation(language)
+    gallery_images = []
+    article_images = list(article.images.all())
+
+    if article_images:
+        for article_image in article_images:
+            gallery_images.append(
+                {
+                    "url": article_image.image.url,
+                    "caption": article_image.caption,
+                    "alt": article_image.caption or translation.title,
+                    "image": article_image.image,
+                }
+            )
+    elif article.cover_image:
+        gallery_images.append(
+            {
+                "url": article.cover_image.url,
+                "caption": article.cover_caption,
+                "alt": translation.title,
+                "image": article.cover_image,
+            }
+        )
 
     related_articles = (
         Article.objects.filter(
@@ -150,6 +173,7 @@ def article_detail(request, language, slug):
         "article": article,
         "translation": translation,
         "category_translation": category_translation,
+        "gallery_images": gallery_images,
         "related_cards": related_cards,
     }
 

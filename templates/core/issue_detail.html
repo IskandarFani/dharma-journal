@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load image_extras %}
 
 {% block content %}
 <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-14">
@@ -19,11 +20,11 @@
     </header>
 
     {% if issue.cover_image %}
-        <figure class="mt-10 overflow-hidden rounded-sm">
+        <figure class="mt-10 overflow-hidden rounded-sm {{ issue.cover_image|image_frame:1.6 }}">
             <img
                 src="{{ issue.cover_image.url }}"
                 alt="{{ issue_translation.title }}"
-                class="h-auto w-full object-cover"
+                class="aspect-[16/10] w-full {{ issue.cover_image|image_fit:1.6 }}"
             >
         </figure>
     {% endif %}
@@ -36,19 +37,19 @@
                         <div>
                             <a
                                 href="{% url 'article_detail' language card.translation.slug %}"
-                                class="group block overflow-hidden rounded-sm"
+                                class="group block overflow-hidden rounded-sm {{ card.article.cover_image|default:card.article.category.cover_image|image_frame:1.333 }}"
                             >
                                 {% if card.article.cover_image %}
                                     <img
                                         src="{{ card.article.cover_image.url }}"
                                         alt="{{ card.translation.title }}"
-                                        class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
+                                        class="aspect-[4/3] w-full {{ card.article.cover_image|image_fit:1.333 }} transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
                                     >
                                 {% elif card.article.category.cover_image %}
                                     <img
                                         src="{{ card.article.category.cover_image.url }}"
                                         alt="{{ card.translation.title }}"
-                                        class="aspect-[4/3] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
+                                        class="aspect-[4/3] w-full {{ card.article.category.cover_image|image_fit:1.333 }} transition duration-700 ease-out group-hover:scale-[1.035] group-hover:opacity-90"
                                     >
                                 {% else %}
                                     <div class="fallback-cover flex aspect-[4/3] items-center justify-center text-[10px] uppercase tracking-[0.25em] text-stone-500">

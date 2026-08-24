@@ -8,6 +8,7 @@ db.sqlite3
 
 .env
 .env.*
+.editorial_bot_sessions.json
 
 staticfiles/
 media/

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load image_extras %}
 
 {% block content %}
 <section class="mx-auto max-w-7xl min-w-0 px-4 py-8 md:px-6 md:py-12">
@@ -8,19 +9,19 @@
                 <article class="article-card flex h-full min-w-0 flex-col border-b hairline pb-8 md:border md:p-4">
                     <a
                         href="{% url 'article_detail' language featured_card.translation.slug %}"
-                        class="group block overflow-hidden rounded-sm"
+                        class="group block overflow-hidden rounded-sm {{ featured_card.article.cover_image|default:featured_card.article.category.cover_image|image_frame:1.6 }}"
                     >
                         {% if featured_card.article.cover_image %}
                             <img
                                 src="{{ featured_card.article.cover_image.url }}"
                                 alt="{{ featured_card.translation.title }}"
-                                class="aspect-[16/10] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
+                                class="aspect-[16/10] w-full {{ featured_card.article.cover_image|image_fit:1.6 }} transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
                             >
                         {% elif featured_card.article.category.cover_image %}
                             <img
                                 src="{{ featured_card.article.category.cover_image.url }}"
                                 alt="{{ featured_card.translation.title }}"
-                                class="aspect-[16/10] w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
+                                class="aspect-[16/10] w-full {{ featured_card.article.category.cover_image|image_fit:1.6 }} transition duration-700 ease-out group-hover:scale-[1.025] group-hover:opacity-90"
                             >
                         {% else %}
                             <div class="fallback-cover flex aspect-[16/10] items-center justify-center text-xs uppercase tracking-[0.3em] text-stone-600">
@@ -87,19 +88,19 @@
                 <article class="article-card grid min-w-0 gap-4 border-b hairline pb-5 md:border md:p-4 xl:min-h-0 xl:grid-cols-[minmax(180px,0.44fr)_1fr]">
                     <a
                         href="{% url 'article_detail' language card.translation.slug %}"
-                        class="group block overflow-hidden rounded-sm xl:h-full"
+                        class="group block overflow-hidden rounded-sm xl:h-full {{ card.article.cover_image|default:card.article.category.cover_image|image_frame:1.333 }}"
                     >
                         {% if card.article.cover_image %}
                             <img
                                 src="{{ card.article.cover_image.url }}"
                                 alt="{{ card.translation.title }}"
-                                class="aspect-[16/7] w-full object-cover transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
+                                class="aspect-[16/7] w-full {{ card.article.cover_image|image_fit:1.333 }} transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
                             >
                         {% elif card.article.category.cover_image %}
                             <img
                                 src="{{ card.article.category.cover_image.url }}"
                                 alt="{{ card.translation.title }}"
-                                class="aspect-[16/7] w-full object-cover transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
+                                class="aspect-[16/7] w-full {{ card.article.category.cover_image|image_fit:1.333 }} transition duration-500 group-hover:scale-[1.03] md:aspect-[4/3] xl:h-full xl:aspect-auto"
                             >
                         {% else %}
                             <div class="fallback-cover flex aspect-[16/7] items-center justify-center text-[10px] uppercase tracking-[0.22em] text-stone-500 md:aspect-[4/3] xl:h-full xl:aspect-auto">

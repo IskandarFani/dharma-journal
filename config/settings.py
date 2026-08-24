@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "articles.apps.ArticlesConfig",
+    "editorial_bot.apps.EditorialBotConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -132,3 +134,10 @@ DEFAULT_LANGUAGE = "ru"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+TELEGRAM_EDITOR_BOT_TOKEN = os.environ.get("TELEGRAM_EDITOR_BOT_TOKEN", "")
+TELEGRAM_EDITOR_ALLOWED_USER_IDS = [
+    int(user_id)
+    for user_id in os.environ.get("TELEGRAM_EDITOR_ALLOWED_USER_IDS", "").split(",")
+    if user_id.strip().isdigit()
+]

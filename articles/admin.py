@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from .models import (
     Article,
+    ArticleImage,
     ArticleTranslation,
     Author,
     Category,
@@ -170,9 +171,19 @@ class ArticleTranslationInline(admin.StackedInline):
         return formfield
 
 
+class ArticleImageInline(admin.TabularInline):
+    model = ArticleImage
+    extra = 0
+    readonly_fields = ["preview"]
+    fields = ["order", "image", "preview", "caption"]
+
+    def preview(self, obj):
+        return image_preview(obj.image, obj.caption or str(obj.article))
+
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    inlines = [ArticleTranslationInline]
+    inlines = [ArticleTranslationInline, ArticleImageInline]
 
     list_display = [
         "title",

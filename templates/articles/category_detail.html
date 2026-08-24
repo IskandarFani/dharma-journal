@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load image_extras %}
 
 {% block title %}{{ category_translation.title }} | Sanghaya{% endblock %}
 
@@ -24,29 +25,31 @@
 
     {% if category_translation.category.cover_image %}
         <section class="mt-12">
-            <img
-                src="{{ category_translation.category.cover_image.url }}"
-                alt="{{ category_translation.title }}"
-                class="aspect-[16/7] w-full object-cover"
-            >
+            <div class="overflow-hidden rounded-sm {{ category_translation.category.cover_image|image_frame:2.285 }}">
+                <img
+                    src="{{ category_translation.category.cover_image.url }}"
+                    alt="{{ category_translation.title }}"
+                    class="aspect-[16/7] w-full {{ category_translation.category.cover_image|image_fit:2.285 }}"
+                >
+            </div>
         </section>
     {% endif %}
 
     <section class="mt-10 grid gap-6 md:mt-12 md:grid-cols-2 xl:grid-cols-3">
         {% for card in article_cards %}
             <article class="article-card border-t hairline pt-5 md:border md:p-4">
-                <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden rounded-sm">
+                <a href="{% url 'article_detail' language card.translation.slug %}" class="mb-5 block overflow-hidden rounded-sm {{ card.article.cover_image|default:card.article.category.cover_image|image_frame:1.6 }}">
                     {% if card.article.cover_image %}
                         <img
                             src="{{ card.article.cover_image.url }}"
                             alt="{{ card.translation.title }}"
-                            class="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.025]"
+                            class="aspect-[16/10] w-full {{ card.article.cover_image|image_fit:1.6 }} transition duration-500 hover:scale-[1.025]"
                         >
                     {% elif card.article.category.cover_image %}
                         <img
                             src="{{ card.article.category.cover_image.url }}"
                             alt="{{ card.translation.title }}"
-                            class="aspect-[16/10] w-full object-cover transition duration-500 hover:scale-[1.025]"
+                            class="aspect-[16/10] w-full {{ card.article.category.cover_image|image_fit:1.6 }} transition duration-500 hover:scale-[1.025]"
                         >
                     {% else %}
                         <div class="fallback-cover flex aspect-[16/10] items-center justify-center text-xs uppercase tracking-[0.25em] text-stone-500">

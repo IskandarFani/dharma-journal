@@ -170,6 +170,34 @@ class Article(models.Model):
         return self.translations.filter(language=language).first()
 
 
+class ArticleImage(models.Model):
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name="Article",
+    )
+    image = models.ImageField(
+        "Image",
+        upload_to="articles/gallery/",
+    )
+    caption = models.CharField(
+        "Caption",
+        max_length=300,
+        blank=True,
+    )
+    order = models.PositiveIntegerField("Order", default=100)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "Article image"
+        verbose_name_plural = "Article images"
+
+    def __str__(self):
+        return f"{self.article} image #{self.pk}"
+
+
 class ArticleTranslation(models.Model):
     article = models.ForeignKey(
         Article,
