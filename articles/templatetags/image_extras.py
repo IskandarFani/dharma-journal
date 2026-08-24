@@ -22,10 +22,10 @@ def image_fit(image, target_ratio=1.6):
     target_ratio = float(target_ratio)
 
     if ratio < target_ratio * 0.9:
-        return "object-contain p-3"
+        return "object-contain"
 
     if ratio > target_ratio * 1.35:
-        return "object-contain p-3"
+        return "object-contain"
 
     return "object-cover"
 
@@ -48,6 +48,6 @@ def image_frame(image, target_ratio=1.6):
     target_ratio = float(target_ratio)
 
     if ratio < target_ratio * 0.9 or ratio > target_ratio * 1.35:
-        return "bg-stone-100"
+        return "bg-transparent"
 
     return ""

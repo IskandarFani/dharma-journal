@@ -45,11 +45,11 @@
             </div>
 
             {% if gallery_images %}
-                <figure class="article-gallery min-w-0 lg:self-stretch">
+                <figure class="article-gallery min-w-0 lg:self-stretch" data-article-gallery>
                     <div class="article-gallery-track">
                         {% for gallery_image in gallery_images %}
                             <div
-                                id="article-image-{{ forloop.counter }}"
+                                data-gallery-slide
                                 class="article-gallery-slide {{ gallery_image.image|image_frame:1.6 }}"
                             >
                                 <img
@@ -62,9 +62,24 @@
                     </div>
 
                     {% if gallery_images|length > 1 %}
+                        <button class="article-gallery-button article-gallery-button-prev" type="button" data-gallery-prev aria-label="Previous image">
+                            <span aria-hidden="true">&#8249;</span>
+                        </button>
+                        <button class="article-gallery-button article-gallery-button-next" type="button" data-gallery-next aria-label="Next image">
+                            <span aria-hidden="true">&#8250;</span>
+                        </button>
+
+                        <div class="article-gallery-count" aria-live="polite">
+                            <span data-gallery-current>1</span> / {{ gallery_images|length }}
+                        </div>
+
                         <nav class="article-gallery-nav" aria-label="Article gallery">
                             {% for gallery_image in gallery_images %}
-                                <a href="#article-image-{{ forloop.counter }}" aria-label="Image {{ forloop.counter }}"></a>
+                                <button
+                                    type="button"
+                                    data-gallery-dot="{{ forloop.counter0 }}"
+                                    aria-label="Image {{ forloop.counter }}"
+                                ></button>
                             {% endfor %}
                         </nav>
                     {% endif %}
@@ -193,43 +208,96 @@
 
     .article-gallery-track {
         display: flex;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
-    }
-
-    .article-gallery-track::-webkit-scrollbar {
-        display: none;
+        overflow: hidden;
+        border-radius: 0.125rem;
     }
 
     .article-gallery-slide {
         min-width: 100%;
         overflow: hidden;
-        border-radius: 0.125rem;
-        scroll-snap-align: start;
+        transition: transform 220ms ease;
+    }
+
+    .article-gallery {
+        position: relative;
     }
 
     .article-gallery-nav {
         display: flex;
         justify-content: center;
-        gap: 0.55rem;
-        margin-top: 0.9rem;
+        gap: 0.6rem;
+        margin-top: 0.75rem;
     }
 
-    .article-gallery-nav a {
-        width: 0.55rem;
-        height: 0.55rem;
-        border: 1px solid #a8a29e;
+    .article-gallery-nav button {
+        width: 0.62rem;
+        height: 0.62rem;
+        border: 1px solid #78716c;
         border-radius: 999px;
         background: transparent;
+        cursor: pointer;
+        padding: 0;
     }
 
-    .article-gallery-nav a:focus,
-    .article-gallery-nav a:hover {
+    .article-gallery-nav button.is-active,
+    .article-gallery-nav button:focus,
+    .article-gallery-nav button:hover {
         border-color: #92400e;
         background: #92400e;
         outline: none;
+    }
+
+    .article-gallery-button {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        display: grid;
+        width: 2.5rem;
+        height: 2.5rem;
+        place-items: center;
+        border: 1px solid rgba(28, 25, 23, 0.18);
+        border-radius: 999px;
+        background: rgba(250, 247, 240, 0.86);
+        color: #1c1917;
+        transform: translateY(-50%);
+        transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .article-gallery-button:hover,
+    .article-gallery-button:focus {
+        border-color: rgba(146, 64, 14, 0.5);
+        background: rgba(146, 64, 14, 0.92);
+        color: #fff7ed;
+        outline: none;
+    }
+
+    .article-gallery-button span {
+        margin-top: -0.15rem;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .article-gallery-button-prev {
+        left: 0.75rem;
+    }
+
+    .article-gallery-button-next {
+        right: 0.75rem;
+    }
+
+    .article-gallery-count {
+        position: absolute;
+        right: 0.75rem;
+        bottom: 2.1rem;
+        z-index: 2;
+        border-radius: 999px;
+        background: rgba(28, 25, 23, 0.66);
+        color: #faf7f0;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        line-height: 1;
+        padding: 0.45rem 0.6rem;
     }
 
     .article-body hr {
@@ -246,6 +314,54 @@
         .article-body h3 {
             font-size: 1.35rem;
         }
+
+        .article-gallery-button {
+            width: 2.15rem;
+            height: 2.15rem;
+        }
+
+        .article-gallery-button-prev {
+            left: 0.45rem;
+        }
+
+        .article-gallery-button-next {
+            right: 0.45rem;
+        }
     }
 </style>
+
+<script>
+    document.querySelectorAll("[data-article-gallery]").forEach((gallery) => {
+        const slides = Array.from(gallery.querySelectorAll("[data-gallery-slide]"));
+        const dots = Array.from(gallery.querySelectorAll("[data-gallery-dot]"));
+        const current = gallery.querySelector("[data-gallery-current]");
+        const previous = gallery.querySelector("[data-gallery-prev]");
+        const next = gallery.querySelector("[data-gallery-next]");
+        let activeIndex = 0;
+
+        function showSlide(index) {
+            if (!slides.length) {
+                return;
+            }
+
+            activeIndex = (index + slides.length) % slides.length;
+            slides.forEach((slide) => {
+                slide.style.transform = `translateX(-${activeIndex * 100}%)`;
+            });
+            dots.forEach((dot, dotIndex) => {
+                dot.classList.toggle("is-active", dotIndex === activeIndex);
+            });
+            if (current) {
+                current.textContent = String(activeIndex + 1);
+            }
+        }
+
+        previous?.addEventListener("click", () => showSlide(activeIndex - 1));
+        next?.addEventListener("click", () => showSlide(activeIndex + 1));
+        dots.forEach((dot) => {
+            dot.addEventListener("click", () => showSlide(Number(dot.dataset.galleryDot)));
+        });
+        showSlide(0);
+    });
+</script>
 {% endblock %}
